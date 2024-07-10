@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 9111510802533738566}
   - component: {fileID: 1909447388108415659}
   - component: {fileID: -8776676058638880325}
-  m_Layer: 0
+  - component: {fileID: -8978085276443627902}
+  m_Layer: 6
   m_Name: SmallBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +98,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1909447388108415659}
+--- !u!65 &-8978085276443627902
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872485245725056465}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9, y: 0.9, z: 0.9}
+  m_Center: {x: -0.010597393, y: 0.3768801, z: 0}
