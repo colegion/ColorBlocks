@@ -1,4 +1,5 @@
 using System;
+using Interfaces;
 using UnityEngine;
 using static Utilities.CommonFields;
 
@@ -13,7 +14,7 @@ namespace Utilities
         [SerializeField] private float swipeThreshold = 50f;
         [SerializeField] private LayerMask blockLayer;
 
-        private Block _targetBlock;
+        private IMovable _movable;
         private Direction _detectedDirection;
         void Update()
         {
@@ -32,10 +33,10 @@ namespace Utilities
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, blockLayer))
                     {
-                        Block block = hit.collider.GetComponent<Block>();
-                        if (block != null)
+                        IMovable movable = hit.collider.GetComponent<IMovable>();
+                        if (movable != null)
                         {
-                            _targetBlock = block;
+                            _movable = movable;
                             _startTouchPosition = touch.position;
                             _isSwiping = true;
                         }
@@ -75,7 +76,7 @@ namespace Utilities
             }
             
             Debug.Log("Direction: " + _detectedDirection);
-            EventBus.Instance.Trigger(new InputReceivedEvent(_targetBlock, _detectedDirection));
+            _movable.MoveSelf();
         }
     }
 }

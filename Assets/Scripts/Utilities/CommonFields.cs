@@ -49,15 +49,13 @@ namespace Utilities
             Left
         }
 
-        public class InputReceivedEvent
+        public class ControllerReadyEvent
         {
-            public Block targetBlock;
-            public Direction desiredDirection;
+            public LevelController Controller;
 
-            public InputReceivedEvent(Block target, Direction direction)
+            public ControllerReadyEvent(LevelController controller)
             {
-                targetBlock = target;
-                desiredDirection = direction;
+                Controller = controller;
             }
         }
     }

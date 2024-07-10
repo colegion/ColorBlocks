@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Scriptables;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities;
 using static Utilities.CommonFields;
 
 public class LevelLoader : MonoBehaviour
 {
-    private Cell[,] _levelGrid;
+    [SerializeField] private LevelController levelController;
+    private Cell[,] _cellGrid;
+    private Block[,] _blockGrid;
     private LevelInfo _currentLevel;
     private int _levelIndex = 1;
 
@@ -21,11 +24,12 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         _currentLevel = JsonReader.ReadJSon("Level1");
-        _levelGrid = new Cell[_currentLevel.rowCount, _currentLevel.columnCount];
+        _cellGrid = new Cell[_currentLevel.rowCount, _currentLevel.columnCount];
         
         SpawnCells();
         SpawnBlocks();
         SpawnExits();
+        EventBus.Instance.Trigger(new ControllerReadyEvent(levelController));
     }
 
     private void SpawnCells()
@@ -35,7 +39,7 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in cells)
         {
             var tempCell = Instantiate(cell, transform);
-            _levelGrid[element.row, element.column] = tempCell;
+            _cellGrid[element.row, element.column] = tempCell;
             tempCell.ConfigureSelf(new Vector2(element.row, element.column));
         }
     }
@@ -47,6 +51,7 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in movables)
         {
             var tempBlock = Instantiate(block, transform);
+            _blockGrid[element.row, element.column] = tempBlock;
             tempBlock.ConfigureSelf(blockConfigs[element.color], element);
         }
     }
