@@ -48,5 +48,17 @@ namespace Utilities
             Down,
             Left
         }
+
+        public class InputReceivedEvent
+        {
+            public Block targetBlock;
+            public Direction desiredDirection;
+
+            public InputReceivedEvent(Block target, Direction direction)
+            {
+                targetBlock = target;
+                desiredDirection = direction;
+            }
+        }
     }
 }

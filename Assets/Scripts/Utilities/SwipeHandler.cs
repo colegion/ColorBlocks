@@ -6,14 +6,14 @@ namespace Utilities
 {
     public class SwipeHandler : MonoBehaviour
     {
-        private Vector2 startTouchPosition;
-        private Vector2 endTouchPosition;
-        private bool isSwiping = false;
+        private Vector2 _startTouchPosition;
+        private Vector2 _endTouchPosition;
+        private bool _isSwiping = false;
 
         [SerializeField] private float swipeThreshold = 50f;
         [SerializeField] private LayerMask blockLayer;
 
-        private Block selectedBlock;
+        private Block _targetBlock;
         private Direction _detectedDirection;
         void Update()
         {
@@ -35,28 +35,28 @@ namespace Utilities
                         Block block = hit.collider.GetComponent<Block>();
                         if (block != null)
                         {
-                            selectedBlock = block;
-                            startTouchPosition = touch.position;
-                            isSwiping = true;
+                            _targetBlock = block;
+                            _startTouchPosition = touch.position;
+                            _isSwiping = true;
                         }
                     }
                 }
 
-                if (touch.phase == TouchPhase.Moved && isSwiping)
+                if (touch.phase == TouchPhase.Moved && _isSwiping)
                 {
-                    endTouchPosition = touch.position;
-                    Vector2 swipeDirection = endTouchPosition - startTouchPosition;
+                    _endTouchPosition = touch.position;
+                    Vector2 swipeDirection = _endTouchPosition - _startTouchPosition;
 
                     if (swipeDirection.magnitude >= swipeThreshold)
                     {
                         DetectSwipeDirection(swipeDirection);
-                        isSwiping = false;
+                        _isSwiping = false;
                     }
                 }
 
                 if (touch.phase == TouchPhase.Ended)
                 {
-                    isSwiping = false;
+                    _isSwiping = false;
                 }
             }
         }
@@ -67,28 +67,15 @@ namespace Utilities
 
             if (Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y))
             {
-                if (swipeDirection.x > 0)
-                {
-                    _detectedDirection = Direction.Right;
-                }
-                else
-                {
-                    _detectedDirection = Direction.Left;
-                }
+                _detectedDirection = swipeDirection.x > 0 ? Direction.Right : Direction.Left;
             }
             else
             {
-                if (swipeDirection.y > 0)
-                {
-                    _detectedDirection = Direction.Up;
-                }
-                else
-                {
-                    _detectedDirection = Direction.Down;
-                }
+                _detectedDirection = swipeDirection.y > 0 ? Direction.Up : Direction.Down;
             }
             
             Debug.Log("Direction: " + _detectedDirection);
+            EventBus.Instance.Trigger(new InputReceivedEvent(_targetBlock, _detectedDirection));
         }
     }
 }
