@@ -52,14 +52,14 @@ public class Block : MonoBehaviour, IMovable
     {
         if (IsDesiredDirectionValid(direction))
         {
-            CellAttributes currentCell = new CellAttributes((int)transform.position.x, (int)-transform.position.z);
+            CellAttributes currentCell = new CellAttributes((int)transform.position.x, (int)transform.position.z);
             _move = DOTween.Sequence();
             Debug.Log("Moving");
             var path = _controller.GetPath(currentCell, direction);
             foreach (var element in path)
             {
                 Debug.Log("step x: " + element.row + "z: "+ -element.column);
-                _move.Append(transform.DOMove(new Vector3(element.row, 0, -element.column), 0.5f).SetEase(Ease.OutBounce));
+                _move.Append(transform.DOMove(new Vector3(element.row, 0, element.column), 0.5f).SetEase(Ease.OutBounce));
             }
             
             _move.Play().OnComplete(() =>

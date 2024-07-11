@@ -18,12 +18,6 @@ public class LevelController
         _blockGrid = new Block[row, column];
     }
     
-    /*
-    public void InstantiateGrids(int row, int column)
-    {
-        _cellGrid = new Cell[row, column];
-        _blockGrid = new Block[row, column];
-    }*/
 
     public void AssignObjectByType(CellAttributes coordinates, GameObject obj)
     {
@@ -57,7 +51,7 @@ public class LevelController
     public void UpdateBlockPositionOnGrid(Block block, CellAttributes initialPosition)
     {
         var position = block.transform.position;
-        CellAttributes cell = new CellAttributes((int)position.x, (int)-position.z);
+        CellAttributes cell = new CellAttributes((int)position.x, (int)position.z);
         if (IsValidCoordinate(cell) && IsValidCoordinate(initialPosition))
         {
             _blockGrid[cell.row, cell.column] = block;

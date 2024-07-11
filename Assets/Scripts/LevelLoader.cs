@@ -21,7 +21,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private List<BlockConfig> blockConfigs;
     private void Start()
     {
-        _currentLevel = JsonReader.ReadJSon("Level2");
+        _currentLevel = JsonReader.ReadJSon("Level1");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();
