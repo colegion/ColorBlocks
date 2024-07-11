@@ -38,7 +38,7 @@ public class LevelLoader : MonoBehaviour
         {
             var tempCell = Instantiate(cell, transform);
             _levelController.AssignObjectByType(new Vector2Int(element.row, element.column), tempCell.gameObject);
-            tempCell.ConfigureSelf(new Vector2(element.column, element.row));
+            tempCell.ConfigureSelf(new Vector2(element.row, element.column));
         }
     }
 
