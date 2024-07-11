@@ -55,17 +55,14 @@ public class Block : MonoBehaviour, IMovable
             CellAttributes currentCell = new CellAttributes((int)transform.position.x, (int)transform.position.z);
             _move = DOTween.Sequence();
             Debug.Log("Moving");
-            var path = _controller.GetPath(currentCell, direction);
+            var path = _controller.GetPath(this, direction);
             foreach (var element in path)
             {
                 Debug.Log("step x: " + element.row + "z: "+ -element.column);
-                _move.Append(transform.DOMove(new Vector3(element.row, 0, element.column), 0.5f).SetEase(Ease.OutBounce));
+                _move.Append(transform.DOMove(new Vector3(element.row, 0, element.column), 0.3f).SetEase(Ease.Linear));
             }
-            
-            _move.Play().OnComplete(() =>
-            {
-                _controller.UpdateBlockPositionOnGrid(this, currentCell);
-            });
+
+            _move.Play();
         }
         else
         {
@@ -86,6 +83,11 @@ public class Block : MonoBehaviour, IMovable
     public Direction[] GetDirections()
     {
         return _directions;
+    }
+
+    public CellAttributes GetCellAttributes()
+    {
+        return new CellAttributes((int)transform.position.x, (int)transform.position.z);
     }
 
     private void InjectLevelController(ControllerReadyEvent eventData)

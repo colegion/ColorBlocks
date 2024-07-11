@@ -16,7 +16,7 @@ public class LevelLoader : MonoBehaviour
 
     [SerializeField] private Cell cell;
     [SerializeField] private Block block;
-    [SerializeField] private Gate gate;
+    [FormerlySerializedAs("gate")] [SerializeField] private Exit exit;
 
     [SerializeField] private List<BlockConfig> blockConfigs;
     private void Start()
@@ -57,7 +57,7 @@ public class LevelLoader : MonoBehaviour
         var exits = _currentLevel.exitInfo;
         foreach (var element in exits)
         {
-            var tempGate = Instantiate(gate, transform);
+            var tempGate = Instantiate(exit, transform);
             tempGate.ConfigureSelf(element);
         }
     }
