@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Interfaces;
 using Scriptables;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class Block : MonoBehaviour, IMovable
     private BlockConfig _config;
     private MovableAttributes _movableAttributes;
     private Direction[] _directions;
+    private Sequence _move;
 
     private void OnValidate()
     {
@@ -42,7 +44,7 @@ public class Block : MonoBehaviour, IMovable
             (Direction)_movableAttributes.directions[0],
             (Direction)_movableAttributes.directions[1]
         };
-        transform.position = new Vector3(attributes.row, 0, -attributes.column);
+        transform.position = new Vector3(attributes.row, 0, attributes.column);
         transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
     }
     
@@ -50,12 +52,20 @@ public class Block : MonoBehaviour, IMovable
     {
         if (IsDesiredDirectionValid(direction))
         {
+            CellAttributes currentCell = new CellAttributes((int)transform.position.x, (int)-transform.position.z);
+            _move = DOTween.Sequence();
             Debug.Log("Moving");
-            var path = _controller.GetPath(new Vector2Int(_movableAttributes.column, _movableAttributes.row), direction);
+            var path = _controller.GetPath(currentCell, direction);
             foreach (var element in path)
             {
-                Debug.Log("step x: " + element.x + "z: "+ element.y);
+                Debug.Log("step x: " + element.row + "z: "+ -element.column);
+                _move.Append(transform.DOMove(new Vector3(element.row, 0, -element.column), 0.5f).SetEase(Ease.OutBounce));
             }
+            
+            _move.Play().OnComplete(() =>
+            {
+                _controller.UpdateBlockPositionOnGrid(this, currentCell);
+            });
         }
         else
         {

@@ -21,7 +21,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private List<BlockConfig> blockConfigs;
     private void Start()
     {
-        _currentLevel = JsonReader.ReadJSon("Level1");
+        _currentLevel = JsonReader.ReadJSon("Level2");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();
@@ -33,23 +33,21 @@ public class LevelLoader : MonoBehaviour
     private void SpawnCells()
     {
         var cells = _currentLevel.cellInfo;
-
         foreach (var element in cells)
         {
             var tempCell = Instantiate(cell, transform);
-            _levelController.AssignObjectByType(new Vector2Int(element.row, element.column), tempCell.gameObject);
-            tempCell.ConfigureSelf(new Vector2(element.row, element.column));
+            _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempCell.gameObject);
+            tempCell.ConfigureSelf(new CellAttributes(element.row, element.column));
         }
     }
 
     private void SpawnBlocks()
     {
         var movables = _currentLevel.movableInfo;
-
         foreach (var element in movables)
         {
             var tempBlock = Instantiate(block, transform);
-            _levelController.AssignObjectByType(new Vector2Int(element.row, element.column), tempBlock.gameObject);
+            _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
             tempBlock.ConfigureSelf(blockConfigs[element.color], element);
         }
     }
@@ -57,7 +55,6 @@ public class LevelLoader : MonoBehaviour
     private void SpawnExits()
     {
         var exits = _currentLevel.exitInfo;
-
         foreach (var element in exits)
         {
             var tempGate = Instantiate(gate, transform);

@@ -18,6 +18,12 @@ namespace Utilities
     {
         [JsonProperty("Row")] public int row;
         [JsonProperty("Col")] public int column;
+
+        public CellAttributes(int row, int column)
+        {
+            this.row = row;
+            this.column = column;
+        }
     }
 
     [System.Serializable]

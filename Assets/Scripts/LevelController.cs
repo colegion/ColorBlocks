@@ -25,37 +25,52 @@ public class LevelController
         _blockGrid = new Block[row, column];
     }*/
 
-    public void AssignObjectByType(Vector2Int coordinates, GameObject obj)
+    public void AssignObjectByType(CellAttributes coordinates, GameObject obj)
     {
         if (obj.TryGetComponent(out Cell cell))
         {
-            _cellGrid[coordinates.x, coordinates.y] = cell;
+            _cellGrid[coordinates.row, coordinates.column] = cell;
         }
         else if (obj.TryGetComponent(out Block block))
         {
-            _blockGrid[coordinates.x, coordinates.y] = block;
+            _blockGrid[coordinates.row, coordinates.column] = block;
         }
     }
 
-    public List<Vector2Int> GetPath(Vector2Int current, Direction direction)
+    public List<CellAttributes> GetPath(CellAttributes current, Direction direction)
     {
-        List<Vector2Int> path = new List<Vector2Int>();
+        List<CellAttributes> path = new List<CellAttributes>();
         var directionVector = DirectionVectors[direction];
-        var nextPos = new Vector2Int(current.x + directionVector.x, current.y + directionVector.y);
+        var nextPos = new CellAttributes(current.row + directionVector.x, current.column + directionVector.y);
         while (IsValidCoordinate(nextPos))
         {
-            if (_blockGrid[nextPos.x, nextPos.y] == null)
+            if (_blockGrid[nextPos.row, nextPos.column] == null)
             {
                 path.Add(nextPos);
             }
-            nextPos = new Vector2Int(nextPos.x + directionVector.x, nextPos.y + directionVector.y);
+            nextPos = new CellAttributes(nextPos.row + directionVector.x, nextPos.column + directionVector.y);
         }
         
         return path;
     }
 
-    private bool IsValidCoordinate(Vector2Int coordinate)
+    public void UpdateBlockPositionOnGrid(Block block, CellAttributes initialPosition)
     {
-        return _cellGrid.GetLength(0) > coordinate.x && coordinate.x >= 0 && _cellGrid.GetLength(1) > coordinate.y && coordinate.y >= 0;
+        var position = block.transform.position;
+        CellAttributes cell = new CellAttributes((int)position.x, (int)-position.z);
+        if (IsValidCoordinate(cell) && IsValidCoordinate(initialPosition))
+        {
+            _blockGrid[cell.row, cell.column] = block;
+            _blockGrid[initialPosition.row, initialPosition.column] = null;
+        }
+        else
+        {
+            Debug.LogError("There might be a calculation error");
+        }
+    }
+
+    private bool IsValidCoordinate(CellAttributes coordinate)
+    {
+        return _cellGrid.GetLength(0) > coordinate.row && coordinate.row >= 0 && _cellGrid.GetLength(1) > coordinate.column && coordinate.column >= 0;
     }
 }

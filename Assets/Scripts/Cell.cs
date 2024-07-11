@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utilities;
 
 public class Cell : MonoBehaviour
 {
-    public void ConfigureSelf(Vector2 position)
+    public void ConfigureSelf(CellAttributes position)
     {
-        transform.position = new Vector3(position.x, 0, -position.y);
+        transform.position = new Vector3(position.row, 0, position.column);
     }
 }
