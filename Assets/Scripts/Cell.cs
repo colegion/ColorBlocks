@@ -20,6 +20,6 @@ public class Cell : MonoBehaviour
 
     public Exit GetExitByDirection(Direction direction)
     {
-        return _exits[direction] != null ? _exits[direction] : throw new Exception("No exit in that direction");
+        return _exits.TryGetValue(direction, out var exit) ? exit : null;
     }
 }

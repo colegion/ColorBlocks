@@ -39,11 +39,12 @@ public class LevelController
         CellAttributes currentPos = null;
         while (IsValidCoordinate(nextPos))
         {
-            if (_blockGrid[nextPos.row, nextPos.column] == null)
+            if (_blockGrid[nextPos.row, nextPos.column] != null)
             {
-                path.Add(nextPos);
+                break;
             }
 
+            path.Add(nextPos);
             currentPos = nextPos;
             nextPos = new CellAttributes(nextPos.row + directionVector.x, nextPos.column + directionVector.y);
         }
@@ -53,9 +54,13 @@ public class LevelController
         if (exit != null && exit.GetColor() == block.GetColor())
         {
             path.Add(exit.GetExitPosition());
+            RemoveBlockFromGrid(initialPos);
+        }
+        else
+        {
+            UpdateBlockPositionOnGrid(block, currentPos, initialPos);
         }
         
-        UpdateBlockPositionOnGrid(block, currentPos, initialPos);
         return path;
     }
 
@@ -74,6 +79,14 @@ public class LevelController
         {
             //@todo: means block got out of the grid using exit. hard mind mapping. need to find better way.
             Debug.LogError("There might be a calculation error");
+        }
+    }
+
+    private void RemoveBlockFromGrid(CellAttributes position)
+    {
+        if (IsValidCoordinate(position))
+        {
+            _blockGrid[position.row, position.column] = null;
         }
     }
 
