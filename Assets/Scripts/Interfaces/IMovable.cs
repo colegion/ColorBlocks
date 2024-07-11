@@ -5,6 +5,6 @@ namespace Interfaces
 {
     public interface IMovable
     {
-        public void MoveSelf();
+        public void MoveSelf(Direction direction);
     }
 }

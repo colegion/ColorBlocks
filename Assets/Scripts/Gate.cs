@@ -13,8 +13,8 @@ public class Gate : MonoBehaviour
     public void ConfigureSelf(ExitAttributes config)
     {
         _config = config;
-        var xPos = config.row + DirectionVectors[(Direction)config.direction].x;
-        var zPos = config.column + DirectionVectors[(Direction)config.direction].y;
+        var xPos = config.column + DirectionVectors[(Direction)config.direction].x;
+        var zPos = -config.row + DirectionVectors[(Direction)config.direction].y;
         transform.position = new Vector3(xPos, 0, zPos);
         transform.rotation = Quaternion.Euler(RotationVectors[(Direction)config.direction]);
         SetColor();

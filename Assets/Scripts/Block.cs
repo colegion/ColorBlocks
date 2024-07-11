@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using Scriptables;
 using UnityEngine;
@@ -41,13 +42,30 @@ public class Block : MonoBehaviour, IMovable
             (Direction)_movableAttributes.directions[0],
             (Direction)_movableAttributes.directions[1]
         };
-        transform.position = new Vector3(attributes.row, 0, attributes.column);
+        transform.position = new Vector3(attributes.row, 0, -attributes.column);
         transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
     }
     
-    public void MoveSelf()
+    public void MoveSelf(Direction direction)
     {
-        throw new NotImplementedException();
+        if (IsDesiredDirectionValid(direction))
+        {
+            Debug.Log("Moving");
+            var path = _controller.GetPath(new Vector2Int(_movableAttributes.column, _movableAttributes.row), direction);
+            foreach (var element in path)
+            {
+                Debug.Log("step x: " + element.x + "z: "+ element.y);
+            }
+        }
+        else
+        {
+            Debug.Log("Not movable in that direction");
+        }
+    }
+
+    private bool IsDesiredDirectionValid(Direction desired)
+    {
+        return _directions.Contains(desired);
     }
 
     public BlockColors GetColor()

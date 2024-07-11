@@ -16,20 +16,20 @@ namespace Utilities
             { BlockColors.Orange, new Color(255, 165, 0, 255) },
         };
 
-        public static Dictionary<Direction, Vector2> DirectionVectors = new Dictionary<Direction, Vector2>()
+        public static Dictionary<Direction, Vector2Int> DirectionVectors = new Dictionary<Direction, Vector2Int>()
         {
-            { Direction.Up, new Vector2(-1, 0) },
-            { Direction.Right, new Vector2(0, 1) },
-            { Direction.Down, new Vector2(1, 0) },
-            { Direction.Left, new Vector2(0, -1) },
+            { Direction.Up, new Vector2Int(0, 1) },
+            { Direction.Right, new Vector2Int(1, 0) },
+            { Direction.Down, new Vector2Int(0, -1) },
+            { Direction.Left, new Vector2Int(-1, 0) },
         };
         
         public static Dictionary<Direction, Vector3> RotationVectors = new Dictionary<Direction, Vector3>()
         {
-            { Direction.Up, new Vector3(0, 0, 0) },
-            { Direction.Right, new Vector3(0, 90, 0) },
-            { Direction.Down, new Vector3(0, 0, 0) },
-            { Direction.Left, new Vector3(0, 90, 0) },
+            { Direction.Up, new Vector3(0, 90, 0) },
+            { Direction.Right, new Vector3(0, 0, 0) },
+            { Direction.Down, new Vector3(0, 90, 0) },
+            { Direction.Left, new Vector3(0, 0, 0) },
         };
 
         public enum BlockColors

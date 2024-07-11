@@ -10,9 +10,7 @@ using static Utilities.CommonFields;
 
 public class LevelLoader : MonoBehaviour
 {
-    [SerializeField] private LevelController levelController;
-    private Cell[,] _cellGrid;
-    private Block[,] _blockGrid;
+    private LevelController _levelController;
     private LevelInfo _currentLevel;
     private int _levelIndex = 1;
 
@@ -24,12 +22,12 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         _currentLevel = JsonReader.ReadJSon("Level1");
-        _cellGrid = new Cell[_currentLevel.rowCount, _currentLevel.columnCount];
+        _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();
         SpawnBlocks();
         SpawnExits();
-        EventBus.Instance.Trigger(new ControllerReadyEvent(levelController));
+        EventBus.Instance.Trigger(new ControllerReadyEvent(_levelController));
     }
 
     private void SpawnCells()
@@ -39,8 +37,8 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in cells)
         {
             var tempCell = Instantiate(cell, transform);
-            _cellGrid[element.row, element.column] = tempCell;
-            tempCell.ConfigureSelf(new Vector2(element.row, element.column));
+            _levelController.AssignObjectByType(new Vector2Int(element.row, element.column), tempCell.gameObject);
+            tempCell.ConfigureSelf(new Vector2(element.column, element.row));
         }
     }
 
@@ -51,7 +49,7 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in movables)
         {
             var tempBlock = Instantiate(block, transform);
-            _blockGrid[element.row, element.column] = tempBlock;
+            _levelController.AssignObjectByType(new Vector2Int(element.row, element.column), tempBlock.gameObject);
             tempBlock.ConfigureSelf(blockConfigs[element.color], element);
         }
     }
