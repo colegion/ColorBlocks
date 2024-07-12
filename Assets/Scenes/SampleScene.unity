@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cell: {fileID: 5316721238687046888, guid: d2d057c3c6a6aec45881eac22c79460e, type: 3}
   block: {fileID: -8776676058638880325, guid: 1a8f39a74d6824845ae6edfbfcd0a54e, type: 3}
-  gate: {fileID: 4463288726092420230, guid: 0aa59eb2347999e49b29d95eb20f2c54, type: 3}
+  exit: {fileID: 4463288726092420230, guid: 0aa59eb2347999e49b29d95eb20f2c54, type: 3}
   blockConfigs:
   - {fileID: 11400000, guid: bd3bf5957bf7b0649ab208e75cecf52e, type: 2}
   - {fileID: 11400000, guid: 605e8479c221ae74f959bc8066fd91fb, type: 2}

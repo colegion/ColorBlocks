@@ -17,7 +17,6 @@ public class Block : MonoBehaviour, IMovable
     private BlockConfig _config;
     private MovableAttributes _movableAttributes;
     private Direction[] _directions;
-    private Sequence _move;
 
     private void OnValidate()
     {
@@ -48,26 +47,29 @@ public class Block : MonoBehaviour, IMovable
         transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
     }
     
-    public void MoveSelf(Direction direction)
+    public void TriggerMovement(Direction direction)
     {
         if (IsDesiredDirectionValid(direction))
         {
-            CellAttributes currentCell = new CellAttributes((int)transform.position.x, (int)transform.position.z);
-            _move = DOTween.Sequence();
-            Debug.Log("Moving");
-            var path = _controller.GetPath(this, direction);
-            foreach (var element in path)
-            {
-                Debug.Log("step x: " + element.row + "z: "+ -element.column);
-                _move.Append(transform.DOMove(new Vector3(element.row, 0, element.column), 0.3f).SetEase(Ease.Linear));
-            }
-
-            _move.Play();
+            _controller.MoveBlock(this, direction);
         }
         else
         {
             Debug.Log("Not movable in that direction");
         }
+    }
+
+    public void MoveBlock(CellAttributes target, Action onComplete)
+    {
+        transform.DOMove(new Vector3(target.row, 0, target.column), 0.3f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
+    }
+
+    public void AnimateBlock(bool isSuccessful)
+    {
+        
     }
 
     private bool IsDesiredDirectionValid(Direction desired)
@@ -87,7 +89,10 @@ public class Block : MonoBehaviour, IMovable
 
     public CellAttributes GetCellAttributes()
     {
-        return new CellAttributes((int)transform.position.x, (int)transform.position.z);
+        Vector2 position;
+            position = new Vector2(transform.position.x + (DirectionVectors[_directions[0]].x * (_movableAttributes.length -1)),
+                transform.position.z + (DirectionVectors[_directions[0]].y * (_movableAttributes.length -1)));
+        return new CellAttributes((int)position.x, (int)position.y);
     }
 
     private void InjectLevelController(ControllerReadyEvent eventData)

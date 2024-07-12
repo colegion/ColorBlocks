@@ -16,12 +16,14 @@ public class LevelLoader : MonoBehaviour
 
     [SerializeField] private Cell cell;
     [SerializeField] private Block block;
-    [FormerlySerializedAs("gate")] [SerializeField] private Exit exit;
+    [SerializeField] private Exit exit;
 
     [SerializeField] private List<BlockConfig> blockConfigs;
+
+    private Dictionary<BlockColors, List<BlockConfig>> _blockDictionary;
     private void Start()
     {
-        _currentLevel = JsonReader.ReadJSon("Level3");
+        _currentLevel = JsonReader.ReadJSon("Level1");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();

@@ -10,6 +10,7 @@ using EventBus = Utilities.EventBus;
 public class Exit : MonoBehaviour
 {
     [SerializeField] private MeshRenderer[] wallMeshes;
+    [SerializeField] private ParticleSystem _exitParticle;
     private LevelController _controller;
     private ExitAttributes _config;
 
@@ -38,6 +39,12 @@ public class Exit : MonoBehaviour
     {
         wallMeshes[0].material.color = ColorDictionary[(BlockColors)_config.color];
         wallMeshes[1].material.color = ColorDictionary[(BlockColors)_config.color];
+    }
+
+    public void PlayParticle(bool isSuccessful)
+    {
+        var main = _exitParticle.main.startColor;
+        main.color = ColorDictionary[GetColor()];
     }
 
     public BlockColors GetColor()

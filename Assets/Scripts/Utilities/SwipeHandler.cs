@@ -76,7 +76,7 @@ namespace Utilities
             }
             
             Debug.Log("Direction: " + _detectedDirection);
-            _movable.MoveSelf(_detectedDirection);
+            _movable.TriggerMovement(_detectedDirection);
         }
     }
 }

@@ -30,56 +30,52 @@ public class LevelController
         }
     }
 
-    public List<CellAttributes> GetPath(Block block, Direction direction)
+    public void MoveBlock(Block block, Direction direction)
     {
-        List<CellAttributes> path = new List<CellAttributes>();
         var initialPos = block.GetCellAttributes();
         var directionVector = DirectionVectors[direction];
         var nextPos = new CellAttributes(initialPos.row + directionVector.x, initialPos.column + directionVector.y);
-        CellAttributes currentPos = null;
+        CellAttributes finalPos = null;
         while (IsValidCoordinate(nextPos))
         {
             if (_blockGrid[nextPos.row, nextPos.column] != null)
             {
                 break;
             }
-
-            path.Add(nextPos);
-            currentPos = nextPos;
+            
+            finalPos = nextPos;
             nextPos = new CellAttributes(nextPos.row + directionVector.x, nextPos.column + directionVector.y);
         }
 
-        var finalCell = TryGetCell(currentPos);
+        var finalCell = TryGetCell(finalPos);
         var exit = finalCell.GetExitByDirection(direction);
-        if (exit != null && exit.GetColor() == block.GetColor())
+        var isSuccessful = IsSuccessfulMovement(block, exit);
+        
+        if (isSuccessful)
         {
-            path.Add(exit.GetExitPosition());
             RemoveBlockFromGrid(initialPos);
         }
         else
         {
-            UpdateBlockPositionOnGrid(block, currentPos, initialPos);
+            UpdateBlockPositionOnGrid(block, finalPos, initialPos);
         }
         
-        return path;
+        block.MoveBlock(finalPos, () =>
+        {
+            exit.PlayParticle(isSuccessful);
+            block.AnimateBlock(isSuccessful);
+        });
+    }
+
+    private bool IsSuccessfulMovement(Block block, Exit exit)
+    {
+        return exit != null && exit.GetColor() == block.GetColor();
     }
 
     private void UpdateBlockPositionOnGrid(Block block, CellAttributes finalPosition, CellAttributes initialPosition)
     {
-        if (IsValidCoordinate(initialPosition))
-        {
-            _blockGrid[initialPosition.row, initialPosition.column] = null;
-        }
-        
-        if (IsValidCoordinate(finalPosition))
-        {
-            _blockGrid[finalPosition.row, finalPosition.column] = block;
-        }
-        else
-        {
-            //@todo: means block got out of the grid using exit. hard mind mapping. need to find better way.
-            Debug.LogError("There might be a calculation error");
-        }
+        _blockGrid[initialPosition.row, initialPosition.column] = null;
+        _blockGrid[finalPosition.row, finalPosition.column] = block;
     }
 
     private void RemoveBlockFromGrid(CellAttributes position)
