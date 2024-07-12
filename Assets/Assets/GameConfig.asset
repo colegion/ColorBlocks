@@ -18,6 +18,6 @@ MonoBehaviour:
   BlockConfigs:
   - {fileID: 11400000, guid: bd3bf5957bf7b0649ab208e75cecf52e, type: 2}
   - {fileID: 11400000, guid: 605e8479c221ae74f959bc8066fd91fb, type: 2}
-  - {fileID: 11400000, guid: 3344214632c7334488327b3df4aa9427, type: 2}
   - {fileID: 11400000, guid: 9e76ed2aa208adb4692dc74a6286733d, type: 2}
   - {fileID: 11400000, guid: 57b14c4f32964af439a780de0e330ab7, type: 2}
+  - {fileID: 11400000, guid: 3344214632c7334488327b3df4aa9427, type: 2}

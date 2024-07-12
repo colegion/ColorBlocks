@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using Scriptables;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         _currentLevel = JsonReader.ReadJSon("Level4");
+        SortMovablesByLength();
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();
@@ -31,14 +33,20 @@ public class LevelLoader : MonoBehaviour
         EventBus.Instance.Trigger(new ControllerReadyEvent(_levelController));
     }
 
+    private void SortMovablesByLength()
+    {
+        var sortedMovableInfo = _currentLevel.movableInfo.OrderBy(x => x.length).ToList();
+        _currentLevel.movableInfo = sortedMovableInfo.ToArray();
+    }
+
     private void SpawnCells()
     {
         var cells = _currentLevel.cellInfo;
         foreach (var element in cells)
         {
             var tempCell = Instantiate(cell, transform);
-            _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempCell.gameObject);
-            tempCell.ConfigureSelf(new CellAttributes(element.row, element.column));
+            //_levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempCell.gameObject);
+            tempCell.InjectCellData(new CellAttributes(element.row, element.column));
         }
     }
 
@@ -48,8 +56,8 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in movables)
         {
             var tempBlock = Instantiate(block, transform);
-            _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
-            tempBlock.ConfigureSelf(element, gameConfig);
+            //_levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
+            tempBlock.InjectBlockData(element, gameConfig);
         }
     }
 

@@ -16,8 +16,11 @@ public class Block : MonoBehaviour, IMovable
 
     private LevelController _controller;
     private BlockConfig _config;
+    private GameConfig _gameConfig;
     private MovableAttributes _movableAttributes;
     private Direction[] _directions;
+
+    private List<CellAttributes> _cellAttributes = new List<CellAttributes>(); 
 
     private void OnValidate()
     {
@@ -35,13 +38,14 @@ public class Block : MonoBehaviour, IMovable
         RemoveListeners();
     }
 
-    public void ConfigureSelf(MovableAttributes attributes, GameConfig gameData)
+    public void InjectBlockData(MovableAttributes attributes, GameConfig gameData)
     {
         _config = gameData.GetConfigByColor(attributes.color);
         _movableAttributes = attributes;
-        ConfigureDirectionArray();
+        _gameConfig = gameData;
+        /*ConfigureDirectionArray();
         ConfigureMesh(gameData);
-        ConfigureTransform(attributes);
+        ConfigureTransform();*/
     }
 
     private void ConfigureDirectionArray()
@@ -59,10 +63,25 @@ public class Block : MonoBehaviour, IMovable
         meshFilter.mesh = gameData.GetMeshByLength(_movableAttributes.length);
     }
 
-    private void ConfigureTransform(MovableAttributes attributes)
+    private void ConfigureTransform()
     {
+        
+        CellAttributes position = new CellAttributes(_movableAttributes.row, _movableAttributes.column);
         transform.position = new Vector3(_movableAttributes.row, 0, _movableAttributes.column);
-        transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
+        _cellAttributes.Add(position);
+        for (int i = 0; i < _directions.Length; i++)
+        {
+            position = new CellAttributes(_movableAttributes.row + DirectionVectors[_directions[i]].x * (_movableAttributes.length -1),
+                _movableAttributes.column + DirectionVectors[_directions[i]].y * (_movableAttributes.length -1));
+            if (!_controller.IsCellBlocked(position))
+            {
+                _cellAttributes.Add(position);
+                break;
+            }
+        }
+        
+        transform.rotation = Quaternion.Euler(RotationVectors[(Direction)_movableAttributes.directions[0]]);
+        _controller.AssignBlock(this);
     }
 
     public void TriggerMovement(Direction direction)
@@ -107,15 +126,20 @@ public class Block : MonoBehaviour, IMovable
 
     public CellAttributes GetCellAttributes()
     {
-        Vector2 position;
-            position = new Vector2(transform.position.x + (DirectionVectors[_directions[0]].x * (_movableAttributes.length -1)),
-                transform.position.z + (DirectionVectors[_directions[0]].y * (_movableAttributes.length -1)));
-        return new CellAttributes((int)position.x, (int)position.y);
+        return new CellAttributes((int)transform.position.x, (int)transform.position.z);
+    }
+
+    public List<CellAttributes> GetCellAttributes_2()
+    {
+        return _cellAttributes;
     }
 
     private void InjectLevelController(ControllerReadyEvent eventData)
     {
         _controller = eventData.Controller;
+        ConfigureDirectionArray();
+        ConfigureMesh(_gameConfig);
+        ConfigureTransform();
     }
 
     private void AddListeners()

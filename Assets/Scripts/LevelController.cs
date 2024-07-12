@@ -18,15 +18,18 @@ public class LevelController
         _blockGrid = new Block[row, column];
     }
 
-    public void AssignObjectByType(CellAttributes coordinates, GameObject obj)
+    public void AssignCell(Cell cell)
     {
-        if (obj.TryGetComponent(out Cell cell))
+        var coordinate = cell.GetCellAttribute();
+        _cellGrid[coordinate.row, coordinate.column] = cell;
+    }
+
+    public void AssignBlock(Block block)
+    {
+        var blockList = block.GetCellAttributes_2();
+        foreach (var coordinate in blockList)
         {
-            _cellGrid[coordinates.row, coordinates.column] = cell;
-        }
-        else if (obj.TryGetComponent(out Block block))
-        {
-            _blockGrid[coordinates.row, coordinates.column] = block;
+            _blockGrid[coordinate.row, coordinate.column] = block;
         }
     }
 
@@ -35,20 +38,17 @@ public class LevelController
         var initialPos = block.GetCellAttributes();
         var directionVector = DirectionVectors[direction];
         var nextPos = new CellAttributes(initialPos.row + directionVector.x, initialPos.column + directionVector.y);
-        CellAttributes finalPos = null;
+        CellAttributes finalPos = initialPos;
         while (IsValidCoordinate(nextPos))
         {
-            if (_blockGrid[nextPos.row, nextPos.column] != null)
-            {
-                break;
-            }
+            if (IsCellBlocked(nextPos)) break;
             
             finalPos = nextPos;
             nextPos = new CellAttributes(nextPos.row + directionVector.x, nextPos.column + directionVector.y);
         }
 
         var finalCell = TryGetCell(finalPos);
-        var exit = finalCell.GetExitByDirection(direction);
+        var exit = finalCell != null ? finalCell.GetExitByDirection(direction) : null;
         var isSuccessful = IsSuccessfulMovement(block, exit);
         
         if (isSuccessful)
@@ -65,6 +65,17 @@ public class LevelController
             exit.PlayParticle(isSuccessful);
             block.AnimateBlock(isSuccessful);
         });
+    }
+
+    public bool IsCellBlocked(CellAttributes nextPos)
+    {
+        if (!IsValidCoordinate(nextPos)) return true;
+        if (_blockGrid[nextPos.row, nextPos.column] != null)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private bool IsSuccessfulMovement(Block block, Exit exit)
@@ -95,7 +106,7 @@ public class LevelController
 
     private Cell TryGetCell(CellAttributes coordinates)
     {
-        return IsValidCoordinate(coordinates) ? _cellGrid[coordinates.row, coordinates.column] : throw new Exception("No suitable cell for this action");
+        return IsValidCoordinate(coordinates) ? _cellGrid[coordinates.row, coordinates.column] : null;
     }
 
     private bool IsValidCoordinate(CellAttributes coordinate)
