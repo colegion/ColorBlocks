@@ -49,7 +49,7 @@ public class LevelLoader : MonoBehaviour
         {
             var tempBlock = Instantiate(block, transform);
             _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
-            tempBlock.ConfigureSelf(gameConfig.GetConfigByColor(element.color), element, gameConfig.GetMeshByLength(element.length));
+            tempBlock.ConfigureSelf(element, gameConfig);
         }
     }
 

@@ -35,21 +35,36 @@ public class Block : MonoBehaviour, IMovable
         RemoveListeners();
     }
 
-    public void ConfigureSelf(BlockConfig config, MovableAttributes attributes, Mesh mesh)
+    public void ConfigureSelf(MovableAttributes attributes, GameConfig gameData)
     {
-        _config = config;
+        _config = gameData.GetConfigByColor(attributes.color);
         _movableAttributes = attributes;
+        ConfigureDirectionArray();
+        ConfigureMesh(gameData);
+        ConfigureTransform(attributes);
+    }
+
+    private void ConfigureDirectionArray()
+    {
         _directions = new [] 
         {
             (Direction)_movableAttributes.directions[0],
             (Direction)_movableAttributes.directions[1]
         };
-        meshRenderer.material.mainTexture = config.GetTextureByLength(_movableAttributes.length, _directions[0]);
-        meshFilter.mesh = mesh;
-        transform.position = new Vector3(attributes.row, 0, attributes.column);
-        transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
     }
     
+    private void ConfigureMesh(GameConfig gameData)
+    {
+        meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
+        meshFilter.mesh = gameData.GetMeshByLength(_movableAttributes.length);
+    }
+
+    private void ConfigureTransform(MovableAttributes attributes)
+    {
+        transform.position = new Vector3(_movableAttributes.row, 0, _movableAttributes.column);
+        transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
+    }
+
     public void TriggerMovement(Direction direction)
     {
         if (IsDesiredDirectionValid(direction))
