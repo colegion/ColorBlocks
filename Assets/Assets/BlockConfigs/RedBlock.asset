@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff3fd732d5180b54cb97f56a9545dc43, type: 3}
   m_Name: RedBlock
   m_EditorClassIdentifier: 
-  TextureMap: {fileID: 2800000, guid: 2677848b1df6fad41bae97a0109db394, type: 3}
   Color: 3
+  BlockTextures:
+  - {fileID: 11400000, guid: eaa61097244b8744297539d682db1873, type: 2}
+  - {fileID: 11400000, guid: 215e10cc1616a37429f6b72c581ab429, type: 2}
+  TextureMap: {fileID: 2800000, guid: 2677848b1df6fad41bae97a0109db394, type: 3}

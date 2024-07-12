@@ -1,13 +1,26 @@
+using System;
+using System.Collections.Generic;
 using TreeEditor;
 using UnityEngine;
 using static Utilities.CommonFields;
 
 namespace Scriptables
 {
-    [CreateAssetMenu(menuName = "Block/Config", fileName = "NewConfig")]
+    [CreateAssetMenu(menuName = "Config/Block", fileName = "NewBlockConfig")]
     public class BlockConfig : ScriptableObject
     {
-        public Texture2D TextureMap;
         public BlockColors Color;
+        public List<TextureConfig> BlockTextures;
+
+        public Texture2D GetTextureByLength(int length, Direction direction)
+        {
+            foreach (var element in BlockTextures)
+            {
+                if (element.Length == length)
+                    return element.GetTextureByDirection(direction);
+            }
+
+            return BlockTextures[0].GetTextureByDirection(direction);
+        }
     }
 }

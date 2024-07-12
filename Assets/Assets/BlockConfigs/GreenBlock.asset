@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff3fd732d5180b54cb97f56a9545dc43, type: 3}
   m_Name: GreenBlock
   m_EditorClassIdentifier: 
-  TextureMap: {fileID: 2800000, guid: bff5f67df87a05f4f9d0276315ece86c, type: 3}
   Color: 1
+  BlockTextures:
+  - {fileID: 11400000, guid: 7f4067fd86e7d354590b94ed1c06d8a6, type: 2}
+  - {fileID: 11400000, guid: 2a9fc147a3fe88a4ba54fd713c3d1ea9, type: 2}
+  TextureMap: {fileID: 2800000, guid: bff5f67df87a05f4f9d0276315ece86c, type: 3}

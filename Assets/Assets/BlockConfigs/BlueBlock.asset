@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff3fd732d5180b54cb97f56a9545dc43, type: 3}
   m_Name: BlueBlock
   m_EditorClassIdentifier: 
-  TextureMap: {fileID: 2800000, guid: 23d7ef525a154bf459c6e0c08601bc70, type: 3}
   Color: 0
+  BlockTextures:
+  - {fileID: 11400000, guid: 87ea3894a3440384f94a7cf106407a4d, type: 2}
+  - {fileID: 11400000, guid: 6ae0e3e66835f3e4497e08b15d9547ab, type: 2}
+  TextureMap: {fileID: 2800000, guid: 23d7ef525a154bf459c6e0c08601bc70, type: 3}

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7b9a387af71d4d4194b1b5d376b07a9, type: 3}
+  m_Name: Blue_01
+  m_EditorClassIdentifier: 
+  Length: 1
+  TextureMap:
+  - {fileID: 2800000, guid: cccd14bf9425a7f4a8341e744afbc380, type: 3}
+  - {fileID: 2800000, guid: 23d7ef525a154bf459c6e0c08601bc70, type: 3}

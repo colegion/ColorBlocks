@@ -13,7 +13,7 @@ namespace Utilities
             { BlockColors.Green, Color.green },
             { BlockColors.Purple, Color.magenta },
             { BlockColors.Red, Color.red },
-            { BlockColors.Orange, new Color(255, 165, 0, 255) },
+            { BlockColors.Yellow, new Color(255, 165, 0, 255) },
         };
 
         public static Dictionary<Direction, Vector2Int> DirectionVectors = new Dictionary<Direction, Vector2Int>()
@@ -38,7 +38,7 @@ namespace Utilities
             Green,
             Purple,
             Red,
-            Orange
+            Yellow
         }
 
         public enum Direction

@@ -12,6 +12,7 @@ using static Utilities.CommonFields;
 public class Block : MonoBehaviour, IMovable
 {
     [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private MeshFilter meshFilter;
 
     private LevelController _controller;
     private BlockConfig _config;
@@ -21,6 +22,7 @@ public class Block : MonoBehaviour, IMovable
     private void OnValidate()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        meshFilter = GetComponent<MeshFilter>();
     }
 
     private void OnEnable()
@@ -33,16 +35,17 @@ public class Block : MonoBehaviour, IMovable
         RemoveListeners();
     }
 
-    public void ConfigureSelf(BlockConfig config, MovableAttributes attributes)
+    public void ConfigureSelf(BlockConfig config, MovableAttributes attributes, Mesh mesh)
     {
         _config = config;
         _movableAttributes = attributes;
-        meshRenderer.material.mainTexture = config.TextureMap;
         _directions = new [] 
         {
             (Direction)_movableAttributes.directions[0],
             (Direction)_movableAttributes.directions[1]
         };
+        meshRenderer.material.mainTexture = config.GetTextureByLength(_movableAttributes.length, _directions[0]);
+        meshFilter.mesh = mesh;
         transform.position = new Vector3(attributes.row, 0, attributes.column);
         transform.rotation = Quaternion.Euler(RotationVectors[(Direction)attributes.directions[0]]);
     }

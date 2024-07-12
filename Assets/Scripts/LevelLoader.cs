@@ -17,13 +17,12 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Cell cell;
     [SerializeField] private Block block;
     [SerializeField] private Exit exit;
+    
+    [SerializeField] private GameConfig gameConfig;
 
-    [SerializeField] private List<BlockConfig> blockConfigs;
-
-    private Dictionary<BlockColors, List<BlockConfig>> _blockDictionary;
     private void Start()
     {
-        _currentLevel = JsonReader.ReadJSon("Level1");
+        _currentLevel = JsonReader.ReadJSon("Level4");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         
         SpawnCells();
@@ -50,7 +49,7 @@ public class LevelLoader : MonoBehaviour
         {
             var tempBlock = Instantiate(block, transform);
             _levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
-            tempBlock.ConfigureSelf(blockConfigs[element.color], element);
+            tempBlock.ConfigureSelf(gameConfig.GetConfigByColor(element.color), element, gameConfig.GetMeshByLength(element.length));
         }
     }
 

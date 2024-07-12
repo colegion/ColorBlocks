@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff3fd732d5180b54cb97f56a9545dc43, type: 3}
   m_Name: OrangeBlock
   m_EditorClassIdentifier: 
-  TextureMap: {fileID: 2800000, guid: 4496738b119b3a744897e8bcc4613dc7, type: 3}
   Color: 4
+  BlockTextures:
+  - {fileID: 11400000, guid: 92a380219daef6446a2f6838621b9adb, type: 2}
+  - {fileID: 11400000, guid: b913f6eb1df4ed949a6f08f048382e98, type: 2}
+  TextureMap: {fileID: 2800000, guid: 4496738b119b3a744897e8bcc4613dc7, type: 3}
