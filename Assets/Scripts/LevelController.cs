@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameObjects;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,8 +52,8 @@ public class LevelController
         
         block.MoveBlock(finalPos, direction, () =>
         {
-            if (exit != null) exit.PlayParticle(isSuccessful);
-            block.AnimateBlock(isSuccessful);
+            if (exit != null) exit.AnimateObject(isSuccessful);
+            block.AnimateObject(isSuccessful);
         });
         
         if (isSuccessful)
