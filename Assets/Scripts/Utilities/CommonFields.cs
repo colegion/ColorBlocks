@@ -59,6 +59,26 @@ namespace Utilities
             }
         }
 
+        public class LevelIndexEvent
+        {
+            public int LevelIndex;
+
+            public LevelIndexEvent(int index)
+            {
+                LevelIndex = index;
+            }
+        }
+
+        public class MovementEvent
+        {
+            public int RemainingMoveCount;
+
+            public MovementEvent(int count)
+            {
+                RemainingMoveCount = count;
+            }
+        }
+
         public class LevelFinishedEvent
         {
             public bool IsSuccessful;

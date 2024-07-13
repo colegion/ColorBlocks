@@ -7,6 +7,7 @@ using GameObjects;
 using Scriptables;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.XR;
 using Utilities;
 using static Utilities.CommonFields;
 
@@ -21,7 +22,22 @@ public class LevelLoader : MonoBehaviour
     
     [SerializeField] private GameConfig gameConfig;
 
+    private void OnEnable()
+    {
+        AddListeners();
+    }
+
+    private void OnDisable()
+    {
+        RemoveListeners();
+    }
+
     private void Start()
+    {
+        LoadLevel();
+    }
+
+    private void LoadLevel()
     {
         _currentLevel = JsonReader.ReadJSon("Level4");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
@@ -30,6 +46,7 @@ public class LevelLoader : MonoBehaviour
         SpawnCells();
         SpawnBlocks();
         SpawnExits();
+        EventBus.Instance.Trigger(new LevelIndexEvent(_levelIndex));
         EventBus.Instance.Trigger(new ControllerReadyEvent(_levelController));
     }
 
@@ -62,5 +79,27 @@ public class LevelLoader : MonoBehaviour
             var tempGate = Instantiate(exit, transform);
             tempGate.ConfigureSelf(element);
         }
+    }
+
+    private void HandleOnLevelComplete(LevelFinishedEvent eventData)
+    {
+        var result = eventData.IsSuccessful;
+
+        if (result)
+        {
+            _levelIndex = (_levelIndex + 1) % 4;
+        }
+        
+        LoadLevel();
+    }
+
+    private void AddListeners()
+    {
+        EventBus.Instance.Register<LevelFinishedEvent>(HandleOnLevelComplete);
+    }
+
+    private void RemoveListeners()
+    {
+        EventBus.Instance.Unregister<LevelFinishedEvent>(HandleOnLevelComplete);
     }
 }

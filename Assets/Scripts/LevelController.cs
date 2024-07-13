@@ -13,7 +13,7 @@ public class LevelController
 {
     private Cell[,] _cellGrid;
     private Block[,] _blockGrid;
-
+    
     private int _moveLimit;
     private int _blockCount;
 
@@ -21,13 +21,15 @@ public class LevelController
     {
         _cellGrid = new Cell[row, column];
         _blockGrid = new Block[row, column];
+        _levelFinishedEventTriggered = false;
+        _blockCount = 0;
     }
 
     public void SetMoveLimit(int count)
     {
         _moveLimit = count;
     }
-
+    
     public void AssignCell(Cell cell)
     {
         var coordinate = cell.GetCellAttribute();
@@ -151,6 +153,7 @@ public class LevelController
     private void DecreaseMoveLimit()
     {
         _moveLimit--;
+        EventBus.Instance.Trigger(new MovementEvent(_moveLimit));
         CheckLevelCompletion();
     }
 

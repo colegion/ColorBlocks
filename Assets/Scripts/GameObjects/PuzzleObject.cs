@@ -31,7 +31,7 @@ namespace GameObjects
 
         public virtual void ReturnToPool()
         {
-            
+            gameObject.SetActive(false);
         }
 
         private void AddListeners()
