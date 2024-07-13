@@ -17,28 +17,20 @@ public class LevelLoader : MonoBehaviour
     private int _levelIndex = 1;
 
     [SerializeField] private Cell cell;
-    [SerializeField] private Block block;
     [SerializeField] private Exit exit;
     
     [SerializeField] private GameConfig gameConfig;
-    [SerializeField] private Block[] blockPrefabs;
 
     private void Start()
     {
         _currentLevel = JsonReader.ReadJSon("Level4");
-        SortMovablesByLength();
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
+        _levelController.SetMoveLimit(_currentLevel.moveLimit);
         
         SpawnCells();
         SpawnBlocks();
         SpawnExits();
         EventBus.Instance.Trigger(new ControllerReadyEvent(_levelController));
-    }
-
-    private void SortMovablesByLength()
-    {
-        var sortedMovableInfo = _currentLevel.movableInfo.OrderBy(x => x.length).ToList();
-        _currentLevel.movableInfo = sortedMovableInfo.ToArray();
     }
 
     private void SpawnCells()
@@ -56,6 +48,7 @@ public class LevelLoader : MonoBehaviour
         var movables = _currentLevel.movableInfo;
         foreach (var element in movables)
         {
+            var pooledBlock = PuzzleObjectPool.Instance.GetAvailableBlock(element.length); 
             var tempBlock = Instantiate(gameConfig.GetPrefabByLength(element.length), transform);
             tempBlock.InjectBlockData(element, gameConfig);
         }

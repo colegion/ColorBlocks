@@ -58,5 +58,15 @@ namespace Utilities
                 Controller = controller;
             }
         }
+
+        public class LevelFinishedEvent
+        {
+            public bool IsSuccessful;
+            
+            public LevelFinishedEvent(bool isSuccess)
+            {
+                IsSuccessful = isSuccess;
+            }
+        }
     }
 }

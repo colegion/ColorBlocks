@@ -7,16 +7,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
 using static Utilities.CommonFields;
+using EventBus = Utilities.EventBus;
 
 public class LevelController
 {
     private Cell[,] _cellGrid;
     private Block[,] _blockGrid;
 
+    private int _moveLimit;
+    private int _blockCount;
+
     public LevelController(int row, int column)
     {
         _cellGrid = new Cell[row, column];
         _blockGrid = new Block[row, column];
+    }
+
+    public void SetMoveLimit(int count)
+    {
+        _moveLimit = count;
     }
 
     public void AssignCell(Cell cell)
@@ -31,6 +40,7 @@ public class LevelController
         foreach (var coordinate in blockList)
         {
             _blockGrid[coordinate.row, coordinate.column] = block;
+            _blockCount++;
         }
     }
 
@@ -64,6 +74,8 @@ public class LevelController
         {
             UpdateBlockPositionOnGrid_2(block, finalPos, direction);
         }
+        
+        DecreaseMoveLimit();
     }
 
     public bool IsCellBlocked(CellAttributes nextPos)
@@ -112,13 +124,19 @@ public class LevelController
 
     private void RemoveBlockFromGrid(List<CellAttributes> positions)
     {
+        Block blockToBeRemoved = null;
         foreach (var coordinate in positions)
         {
             if (IsValidCoordinate(coordinate))
             {
+                blockToBeRemoved = _blockGrid[coordinate.row, coordinate.column]; 
                 _blockGrid[coordinate.row, coordinate.column] = null;
+                
             }
         }
+        blockToBeRemoved.ReturnToPool();
+        DecreaseRemainingBlockCount();
+
     }
 
     public void SetCellExit(Exit exit)
@@ -126,6 +144,32 @@ public class LevelController
         var coordinates = exit.GetCellAttributes();
         var cell = TryGetCell(coordinates);
         cell.SetExitByDirection(exit);
+    }
+
+    private bool _levelFinishedEventTriggered = false;
+
+    private void DecreaseMoveLimit()
+    {
+        _moveLimit--;
+        CheckLevelCompletion();
+    }
+
+    private void DecreaseRemainingBlockCount()
+    {
+        _blockCount--;
+        CheckLevelCompletion();
+    }
+
+    private void CheckLevelCompletion()
+    {
+        if (!_levelFinishedEventTriggered)
+        {
+            if (_moveLimit == 0 || _blockCount == 0)
+            {
+                _levelFinishedEventTriggered = true;
+                EventBus.Instance.Trigger(new LevelFinishedEvent(_blockCount == 0));
+            }
+        }
     }
 
     private Cell TryGetCell(CellAttributes coordinates)

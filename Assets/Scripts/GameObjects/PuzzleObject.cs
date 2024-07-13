@@ -29,6 +29,11 @@ namespace GameObjects
             controller = eventData.Controller;
         }
 
+        public virtual void ReturnToPool()
+        {
+            
+        }
+
         private void AddListeners()
         {
             EventBus.Instance.Register<ControllerReadyEvent>(InjectLevelController);
