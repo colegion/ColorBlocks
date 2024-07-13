@@ -10,6 +10,7 @@ namespace UI
 {
     public class MainUIHelper : MonoBehaviour
     {
+        [SerializeField] private TextMeshProUGUI moveField;
         [SerializeField] private TextMeshProUGUI moveCountField;
         [SerializeField] private TextMeshProUGUI levelIndexField;
         private void OnEnable()
@@ -29,6 +30,15 @@ namespace UI
 
         private void UpdateMoveCountField(MovementEvent eventData)
         {
+            if (eventData.RemainingMoveCount == 0)
+            {
+                moveField.gameObject.SetActive(false);
+            }
+            else
+            {
+                moveField.gameObject.SetActive(true);
+            }
+            
             moveCountField.text = $"{eventData.RemainingMoveCount}";
         }
 

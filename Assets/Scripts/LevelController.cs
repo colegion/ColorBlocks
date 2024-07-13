@@ -16,6 +16,7 @@ public class LevelController
     
     private int _moveLimit;
     private int _blockCount;
+    private bool _moveLimitEnabled;
 
     public LevelController(int row, int column)
     {
@@ -28,6 +29,8 @@ public class LevelController
     public void SetMoveLimit(int count)
     {
         _moveLimit = count;
+        _moveLimitEnabled = _moveLimit > 0;
+        EventBus.Instance.Trigger(new MovementEvent(_moveLimit));
     }
     
     public void AssignCell(Cell cell)
@@ -136,6 +139,7 @@ public class LevelController
                 
             }
         }
+        //@todo: change to not get error
         blockToBeRemoved.ReturnToPool();
         DecreaseRemainingBlockCount();
 
@@ -149,12 +153,14 @@ public class LevelController
     }
 
     private bool _levelFinishedEventTriggered = false;
-
     private void DecreaseMoveLimit()
     {
-        _moveLimit--;
-        EventBus.Instance.Trigger(new MovementEvent(_moveLimit));
-        CheckLevelCompletion();
+        if (_moveLimitEnabled)
+        {
+            _moveLimit--;
+            EventBus.Instance.Trigger(new MovementEvent(_moveLimit));
+            CheckLevelCompletion();
+        }
     }
 
     private void DecreaseRemainingBlockCount()

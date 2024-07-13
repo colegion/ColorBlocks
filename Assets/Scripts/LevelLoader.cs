@@ -39,7 +39,7 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLevel()
     {
-        _currentLevel = JsonReader.ReadJSon("Level4");
+        _currentLevel = JsonReader.ReadJSon("Level1");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         _levelController.SetMoveLimit(_currentLevel.moveLimit);
         
@@ -65,7 +65,7 @@ public class LevelLoader : MonoBehaviour
         var movables = _currentLevel.movableInfo;
         foreach (var element in movables)
         {
-            var pooledBlock = PuzzleObjectPool.Instance.GetAvailableBlock(element.length); 
+            //var pooledBlock = PuzzleObjectPool.Instance.GetAvailableBlock(element.length); 
             var tempBlock = Instantiate(gameConfig.GetPrefabByLength(element.length), transform);
             tempBlock.InjectBlockData(element, gameConfig);
         }
