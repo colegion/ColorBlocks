@@ -17,8 +17,11 @@ public class LevelLoader : MonoBehaviour
     private int _levelIndex = 1;
 
     [SerializeField] private Cell cell;
+    [SerializeField] private Block block;
     [SerializeField] private Exit exit;
+    
     [SerializeField] private GameConfig gameConfig;
+    [SerializeField] private Block[] blockPrefabs;
 
     private void Start()
     {
