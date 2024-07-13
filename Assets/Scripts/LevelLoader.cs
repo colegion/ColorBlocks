@@ -20,22 +20,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Exit exit;
     [SerializeField] private GameConfig gameConfig;
 
-    private void OnEnable()
-    {
-        AddListeners();
-    }
-
-    private void OnDestroy()
-    {
-        RemoveListeners();
-    }
-
     private void Start()
-    {
-        
-    }
-
-    private void LoadLevel(PoolReadyEvent eventData)
     {
         _currentLevel = JsonReader.ReadJSon("Level4");
         SortMovablesByLength();
@@ -58,10 +43,8 @@ public class LevelLoader : MonoBehaviour
         var cells = _currentLevel.cellInfo;
         foreach (var element in cells)
         {
-            var pooledCell = PuzzleObjectPool.Instance.GetAvailableObject();
-            var tempCell = PuzzleObjectFactory.SetPuzzleObjectType(pooledCell.gameObject, PuzzleObjectType.Cell);
-            //var tempCell = Instantiate(cell, transform);
-            tempCell.GetComponent<Cell>().InjectCellData(new CellAttributes(element.row, element.column));
+            var tempCell = Instantiate(cell, transform);
+            tempCell.InjectCellData(new CellAttributes(element.row, element.column));
         }
     }
 
@@ -83,15 +66,5 @@ public class LevelLoader : MonoBehaviour
             var tempGate = Instantiate(exit, transform);
             tempGate.ConfigureSelf(element);
         }
-    }
-
-    private void AddListeners()
-    {
-        EventBus.Instance.Register<PoolReadyEvent>(LoadLevel);
-    }
-
-    private void RemoveListeners()
-    {
-        EventBus.Instance.Unregister<PoolReadyEvent>(LoadLevel);
     }
 }

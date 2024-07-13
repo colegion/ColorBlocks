@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Utilities;
 using static Utilities.CommonFields;
@@ -10,15 +7,10 @@ namespace GameObjects
 {
     public class Exit : PuzzleObject
     {
-        [SerializeField] private List<MeshRenderer> wallMeshes;
-        [SerializeField] private ParticleSystem exitParticle;
+        [SerializeField] private MeshRenderer[] wallMeshes;
+        [SerializeField] private ParticleSystem _exitParticle;
         private ExitAttributes _config;
-
-        private void OnValidate()
-        {
-            wallMeshes = GetComponentsInChildren<MeshRenderer>().ToList();
-        }
-
+        
         public void ConfigureSelf(ExitAttributes config)
         {
             _config = config;
@@ -27,15 +19,12 @@ namespace GameObjects
             transform.position = new Vector3(xPos, 0, zPos);
             transform.rotation = Quaternion.Euler(RotationVectors[(Direction)config.direction]);
             SetColor();
-            gameObject.SetActive(true);
         }
 
         private void SetColor()
         {
             wallMeshes[0].material.color = ColorDictionary[(BlockColors)_config.color];
             wallMeshes[1].material.color = ColorDictionary[(BlockColors)_config.color];
-            wallMeshes[0].enabled = true;
-            wallMeshes[1].enabled = true;
         }
         
         public override void AnimateObject(bool isSuccessful)
