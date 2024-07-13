@@ -35,14 +35,12 @@ public class LevelController
 
     public void MoveBlock(Block block, Direction direction)
     {
-        var initialPos = block.GetCellAttributes();
+        var initialPos = block.GetCellAttributes(direction);
         var directionVector = DirectionVectors[direction];
         var nextPos = new CellAttributes(initialPos.row + directionVector.x, initialPos.column + directionVector.y);
         CellAttributes finalPos = initialPos;
-        while (IsValidCoordinate(nextPos))
+        while (!IsCellBlocked(nextPos))
         {
-            if (IsCellBlocked(nextPos)) break;
-            
             finalPos = nextPos;
             nextPos = new CellAttributes(nextPos.row + directionVector.x, nextPos.column + directionVector.y);
         }
@@ -51,20 +49,20 @@ public class LevelController
         var exit = finalCell != null ? finalCell.GetExitByDirection(direction) : null;
         var isSuccessful = IsSuccessfulMovement(block, exit);
         
+        block.MoveBlock(finalPos, direction, () =>
+        {
+            if (exit != null) exit.PlayParticle(isSuccessful);
+            block.AnimateBlock(isSuccessful);
+        });
+        
         if (isSuccessful)
         {
-            RemoveBlockFromGrid(initialPos);
+            RemoveBlockFromGrid(block.GetCellAttributes_2());
         }
         else
         {
-            UpdateBlockPositionOnGrid(block, finalPos, initialPos);
+            UpdateBlockPositionOnGrid_2(block, finalPos, direction);
         }
-        
-        block.MoveBlock(finalPos, () =>
-        {
-            exit.PlayParticle(isSuccessful);
-            block.AnimateBlock(isSuccessful);
-        });
     }
 
     public bool IsCellBlocked(CellAttributes nextPos)
@@ -82,18 +80,43 @@ public class LevelController
     {
         return exit != null && exit.GetColor() == block.GetColor();
     }
-
-    private void UpdateBlockPositionOnGrid(Block block, CellAttributes finalPosition, CellAttributes initialPosition)
+    
+    private void UpdateBlockPositionOnGrid_2(Block block, CellAttributes finalPosition, Direction direction)
     {
-        _blockGrid[initialPosition.row, initialPosition.column] = null;
-        _blockGrid[finalPosition.row, finalPosition.column] = block;
+        var currentPos = block.GetCellAttributes_2();
+        foreach (var coordinate in currentPos)
+        {
+            _blockGrid[coordinate.row, coordinate.column] = null;
+        }
+        
+        var oppositeDirection = block.GetOppositeDirection(direction);
+        List<CellAttributes> updatedCells = new List<CellAttributes>();
+        block.SetOrientation(direction, finalPosition);
+        if (block.GetLength() == 1)
+        {
+            updatedCells.Add(finalPosition);
+        }
+        var iterations = block.GetLength();
+        for (int i = 0; i < iterations; i++)
+        {
+            var coordinate = new CellAttributes(finalPosition.row + (DirectionVectors[oppositeDirection].x * i),
+                finalPosition.column + (DirectionVectors[oppositeDirection].y * i));
+            updatedCells.Add(coordinate);
+            block.SetOrientation(oppositeDirection, coordinate);
+            _blockGrid[coordinate.row, coordinate.column] = block;
+        }
+        
+        block.SetCellAttributes(updatedCells);
     }
 
-    private void RemoveBlockFromGrid(CellAttributes position)
+    private void RemoveBlockFromGrid(List<CellAttributes> positions)
     {
-        if (IsValidCoordinate(position))
+        foreach (var coordinate in positions)
         {
-            _blockGrid[position.row, position.column] = null;
+            if (IsValidCoordinate(coordinate))
+            {
+                _blockGrid[coordinate.row, coordinate.column] = null;
+            }
         }
     }
 

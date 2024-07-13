@@ -45,7 +45,6 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in cells)
         {
             var tempCell = Instantiate(cell, transform);
-            //_levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempCell.gameObject);
             tempCell.InjectCellData(new CellAttributes(element.row, element.column));
         }
     }
@@ -56,7 +55,6 @@ public class LevelLoader : MonoBehaviour
         foreach (var element in movables)
         {
             var tempBlock = Instantiate(block, transform);
-            //_levelController.AssignObjectByType(new CellAttributes(element.row, element.column), tempBlock.gameObject);
             tempBlock.InjectBlockData(element, gameConfig);
         }
     }

@@ -43,8 +43,8 @@ public class Exit : MonoBehaviour
 
     public void PlayParticle(bool isSuccessful)
     {
-        var main = _exitParticle.main.startColor;
-        main.color = ColorDictionary[GetColor()];
+        //var main = _exitParticle.main.startColor;
+        //main.color = ColorDictionary[GetColor()];
     }
 
     public BlockColors GetColor()
