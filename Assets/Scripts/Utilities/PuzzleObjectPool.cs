@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using GameObjects;
 using UnityEngine;
@@ -10,7 +9,7 @@ namespace Utilities
         [SerializeField] private Transform poolParent;
         [SerializeField] private PuzzleObject objectToPool;
         [SerializeField] private int poolAmount;
-        
+
         private static PuzzleObjectPool _instance;
         public static PuzzleObjectPool Instance
         {
@@ -18,9 +17,7 @@ namespace Utilities
             {
                 if (_instance == null)
                 {
-                    var eventBusGameObject = new GameObject("PuzzlePool");
-                    _instance = eventBusGameObject.AddComponent<PuzzleObjectPool>();
-                    DontDestroyOnLoad(eventBusGameObject);
+                    Debug.LogError("PuzzleObjectPool is not initialized!");
                 }
                 return _instance;
             }
@@ -30,6 +27,19 @@ namespace Utilities
 
         private void Awake()
         {
+            if (_instance == null)
+            {
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (_instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Start()
+        {
             PoolPuzzleObjects();
         }
 
@@ -38,8 +48,11 @@ namespace Utilities
             for (int i = 0; i < poolAmount; i++)
             {
                 var temp = Instantiate(objectToPool, poolParent);
+                temp.gameObject.SetActive(false);
                 _pooledPuzzleObjects.Add(temp);
             }
+
+            EventBus.Instance.Trigger(new CommonFields.PoolReadyEvent());
         }
 
         public PuzzleObject GetAvailableObject()
@@ -49,9 +62,8 @@ namespace Utilities
                 if (!element.gameObject.activeSelf)
                     return element;
             }
-            
-            PoolPuzzleObjects();
-            return GetAvailableObject();
+
+            return null;
         }
     }
 }

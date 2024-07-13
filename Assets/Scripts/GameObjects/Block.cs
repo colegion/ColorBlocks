@@ -13,13 +13,11 @@ namespace GameObjects
     public class Block : PuzzleObject, IMovable
     {
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private MeshFilter meshFilter;
         
         private BlockConfig _config;
         private GameConfig _gameConfig;
         private MovableAttributes _movableAttributes;
         private Direction[] _directions;
-        private Direction _mainDirection;
 
         private List<CellAttributes> _cellAttributes = new List<CellAttributes>();
         private Dictionary<Direction, CellAttributes> _orientation;
@@ -27,7 +25,6 @@ namespace GameObjects
         private void OnValidate()
         {
             meshRenderer = GetComponent<MeshRenderer>();
-            meshFilter = GetComponent<MeshFilter>();
         }
 
         public void InjectBlockData(MovableAttributes attributes, GameConfig gameData)
@@ -44,8 +41,6 @@ namespace GameObjects
                 (Direction)_movableAttributes.directions[0],
                 (Direction)_movableAttributes.directions[1]
             };
-
-            _mainDirection = _directions[0];
         }
     
         private void ConfigureMesh(GameConfig gameData)

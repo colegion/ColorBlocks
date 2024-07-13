@@ -49,6 +49,13 @@ namespace Utilities
             Left
         }
 
+        public enum PuzzleObjectType
+        {
+            Cell = 0,
+            Exit,
+            Block
+        }
+
         public class ControllerReadyEvent
         {
             public LevelController Controller;
@@ -57,6 +64,11 @@ namespace Utilities
             {
                 Controller = controller;
             }
+        }
+
+        public class PoolReadyEvent
+        {
+            
         }
     }
 }
