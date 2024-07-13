@@ -373,6 +373,7 @@ MonoBehaviour:
   block: {fileID: -8776676058638880325, guid: 1a8f39a74d6824845ae6edfbfcd0a54e, type: 3}
   exit: {fileID: 4463288726092420230, guid: 0aa59eb2347999e49b29d95eb20f2c54, type: 3}
   gameConfig: {fileID: 11400000, guid: 08b087f40249957489af433371106beb, type: 2}
+  blockPrefabs: []
 --- !u!4 &1168613868
 Transform:
   m_ObjectHideFlags: 0

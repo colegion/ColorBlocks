@@ -51,7 +51,6 @@ namespace GameObjects
         private void ConfigureMesh(GameConfig gameData)
         {
             meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
-            meshFilter.mesh = gameData.GetMeshByLength(_movableAttributes.length);
         }
       
         private void ConfigureTransform()

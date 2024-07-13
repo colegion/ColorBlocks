@@ -21,6 +21,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Exit exit;
     
     [SerializeField] private GameConfig gameConfig;
+    [SerializeField] private Block[] blockPrefabs;
 
     private void Start()
     {
@@ -55,7 +56,7 @@ public class LevelLoader : MonoBehaviour
         var movables = _currentLevel.movableInfo;
         foreach (var element in movables)
         {
-            var tempBlock = Instantiate(block, transform);
+            var tempBlock = Instantiate(gameConfig.GetPrefabByLength(element.length), transform);
             tempBlock.InjectBlockData(element, gameConfig);
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameObjects;
 using TreeEditor;
 using UnityEngine;
 using static Utilities.CommonFields;
@@ -11,7 +12,7 @@ namespace Scriptables
     {
         public BlockColors Color;
         public List<TextureConfig> BlockTextures;
-
+        
         public Texture2D GetTextureByLength(int length, Direction direction)
         {
             foreach (var element in BlockTextures)

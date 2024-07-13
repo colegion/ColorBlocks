@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 9111510802533738566}
   - component: {fileID: 1909447388108415659}
   - component: {fileID: -8776676058638880325}
-  - component: {fileID: 1558640912902267640}
+  - component: {fileID: 1927454865360784262}
   m_Layer: 6
-  m_Name: Block
+  m_Name: LargeBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1872485245725056465}
-  m_Mesh: {fileID: -3084969076545934841, guid: 4ca66bb18e7a280459f1e051aaf3c548, type: 3}
+  m_Mesh: {fileID: -4031891802670600941, guid: 7e496a8e3d7e8254883ff453ab2bad81, type: 3}
 --- !u!23 &1909447388108415659
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1909447388108415659}
   meshFilter: {fileID: 9111510802533738566}
---- !u!65 &1558640912902267640
+--- !u!65 &1927454865360784262
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,5 +118,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.7537602, z: 1}
-  m_Center: {x: 0, y: 0.3768801, z: 0}
+  m_Size: {x: 2, y: 0.75376034, z: 1.0000002}
+  m_Center: {x: 0.49999997, y: 0.37688017, z: 0.000000029802322}

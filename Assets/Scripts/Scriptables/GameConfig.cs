@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using GameObjects;
 using UnityEngine;
 
 namespace Scriptables
@@ -7,6 +9,7 @@ namespace Scriptables
     {
         public Mesh[] BlockMeshes;
         public BlockConfig[] BlockConfigs;
+        public List<BlockPrefabConfig> BlockPrefabs;
 
         public Mesh GetMeshByLength(int length)
         {
@@ -16,6 +19,12 @@ namespace Scriptables
         public BlockConfig GetConfigByColor(int colorIndex)
         {
             return BlockConfigs[colorIndex];
+        }
+        
+        public Block GetPrefabByLength(int length)
+        {
+            var config = BlockPrefabs.Find(x => x.Length == length);
+            return config.Prefab;
         }
     }
 }

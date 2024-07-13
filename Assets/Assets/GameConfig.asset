@@ -21,3 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9e76ed2aa208adb4692dc74a6286733d, type: 2}
   - {fileID: 11400000, guid: 57b14c4f32964af439a780de0e330ab7, type: 2}
   - {fileID: 11400000, guid: 3344214632c7334488327b3df4aa9427, type: 2}
+  BlockPrefabs:
+  - {fileID: 11400000, guid: 7b446e5e4de1f384d97ff3116f543903, type: 2}
+  - {fileID: 11400000, guid: a5f6400a69f8eca4ea626abd70786ba6, type: 2}
