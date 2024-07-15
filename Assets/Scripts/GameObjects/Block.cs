@@ -13,6 +13,7 @@ namespace GameObjects
     public class Block : PuzzleObject, IMovable, IPoolable
     {
         [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private TrailRenderer trailRenderer;
         
         
         private BlockConfig _config;
@@ -51,6 +52,8 @@ namespace GameObjects
         private void ConfigureMesh()
         {
             meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
+            trailRenderer.startColor = ColorDictionary[_config.Color];
+            trailRenderer.endColor = new Color(255, 255, 255, 0);
         }
       
         private void ConfigureTransform()
