@@ -26,7 +26,7 @@ namespace Utilities
         
         public static Dictionary<Direction, Vector3> RotationVectors = new Dictionary<Direction, Vector3>()
         {
-            { Direction.Up, new Vector3(0, 180, 0) },
+            { Direction.Up, new Vector3(0, 0, 0) },
             { Direction.Right, new Vector3(0, -90, 0) },
             { Direction.Down, new Vector3(0, 0, 0) },
             { Direction.Left, new Vector3(0, 90, 0) },

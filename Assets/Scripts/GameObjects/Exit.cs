@@ -1,5 +1,7 @@
+using DG.Tweening;
 using Interfaces;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utilities;
 using static Utilities.CommonFields;
 using EventBus = Utilities.EventBus;
@@ -9,7 +11,7 @@ namespace GameObjects
     public class Exit : PuzzleObject, IPoolable
     {
         [SerializeField] private MeshRenderer[] wallMeshes;
-        [SerializeField] private ParticleSystem _exitParticle;
+        [SerializeField] private ParticleSystem exitParticle;
         private ExitAttributes _config;
         
         public void ConfigureSelf(ExitAttributes config)
@@ -20,6 +22,10 @@ namespace GameObjects
             var zPos = config.column + DirectionVectors[(Direction)config.direction].y;
             transform.position = new Vector3(xPos, 0, zPos);
             transform.rotation = Quaternion.Euler(RotationVectors[(Direction)config.direction]);
+            if ((Direction)config.direction == Direction.Up)
+            {
+                exitParticle.transform.localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+            }
             SetColor(ColorDictionary[(BlockColors)_config.color]);
         }
 
@@ -31,23 +37,39 @@ namespace GameObjects
         
         public override void AnimateObject(bool isSuccessful)
         {
-            PlayParticle(isSuccessful);
-        }
-
-        private void PlayParticle(bool isSuccessful)
-        {
-            if (isSuccessful)
-            {
-                _exitParticle.GetComponent<Renderer>().material.color = ColorDictionary[GetColor()];
-                var main = _exitParticle.main;
-                main.startColor = new ParticleSystem.MinMaxGradient(ColorDictionary[GetColor()]);
-                _exitParticle.Play();
-            }
+           AnimateDoors(isSuccessful);
         }
 
         private void AnimateDoors(bool isSuccess)
         {
-            
+            Sequence sequence = DOTween.Sequence();
+            if (isSuccess)
+            {
+                sequence.Append(wallMeshes[0].transform.DOScaleY(0.1f, 0.4f).SetEase(Ease.OutCirc));
+                sequence.Join(wallMeshes[1].transform.DOScaleY(0.1f, 0.4f).SetEase(Ease.OutCirc));
+
+                sequence.AppendCallback(() =>
+                {
+                    exitParticle.GetComponent<Renderer>().material.color = ColorDictionary[GetColor()];
+
+
+                    var main = exitParticle.main;
+                    main.startColor = new ParticleSystem.MinMaxGradient(ColorDictionary[GetColor()]);
+                    exitParticle.Play();
+                });
+
+                sequence.AppendInterval(0.4f);
+                sequence.Append(wallMeshes[0].transform.DOScaleY(1, 0.4f).SetEase(Ease.OutCirc));
+                sequence.Join(wallMeshes[1].transform.DOScaleY(1, 0.4f).SetEase(Ease.OutCirc));
+                sequence.Play();
+            }
+            else
+            {
+                sequence.Append(wallMeshes[0].transform.DOPunchRotation(new Vector3(0.5f, 0, 0), 0.5f)
+                    .SetEase(Ease.Linear));
+                sequence.Join(wallMeshes[1].transform.DOPunchRotation(new Vector3(0.5f, 0, 0), 0.5f)
+                    .SetEase(Ease.Linear));
+            }
         }
 
         public BlockColors GetColor()

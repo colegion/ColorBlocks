@@ -59,7 +59,7 @@ namespace GameObjects
             CellAttributes position = new CellAttributes(_movableAttributes.row, _movableAttributes.column);
             transform.position = new Vector3(_movableAttributes.row, 0, _movableAttributes.column);
             _cellAttributes.Add(position);
-            for (int i = _directions.Length-1; i >= 0; i--)
+            for (int i = 0; i < _directions.Length; i++)
             {
                 position = new CellAttributes(_movableAttributes.row + DirectionVectors[_directions[i]].x * (_movableAttributes.length -1),
                     _movableAttributes.column + DirectionVectors[_directions[i]].y * (_movableAttributes.length -1));

@@ -17,7 +17,7 @@ public class LevelLoader : MonoBehaviour
 {
     private LevelController _levelController;
     private LevelInfo _currentLevel;
-    private int _levelIndex = 1;
+    private int _levelIndex = 4;
 
     [SerializeField] private PoolController poolController;
     [SerializeField] private GameConfig gameConfig;
