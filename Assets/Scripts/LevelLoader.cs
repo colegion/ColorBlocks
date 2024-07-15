@@ -85,14 +85,13 @@ public class LevelLoader : MonoBehaviour
 
     private void HandleOnLevelComplete(LevelFinishedEvent eventData)
     {
-        var result = eventData.IsSuccessful;
-        
         poolController.ClearActiveObjects();
-        if (result)
+    
+        if (eventData.IsSuccessful)
         {
-            _levelIndex = (_levelIndex + 1) % 4;
+            _levelIndex = _levelIndex % 4 + 1;
         }
-        
+
         LoadLevel();
     }
 

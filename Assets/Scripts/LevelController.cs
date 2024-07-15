@@ -184,6 +184,16 @@ public class LevelController
         }
     }
 
+    public int GetHeight()
+    {
+        return _cellGrid.GetLength(1);
+    }
+
+    public int GetWidth()
+    {
+        return _cellGrid.GetLength(0);
+    }
+
     private Cell TryGetCell(CellAttributes coordinates)
     {
         return IsValidCoordinate(coordinates) ? _cellGrid[coordinates.row, coordinates.column] : null;
