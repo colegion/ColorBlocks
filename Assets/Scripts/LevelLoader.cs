@@ -103,7 +103,10 @@ public class LevelLoader : MonoBehaviour
  
     private void RemoveListeners()
     {
-        EventBus.Instance.Unregister<LevelFinishedEvent>(HandleOnLevelComplete);
-        EventBus.Instance.Unregister<PoolReadyEvent>(InitiateGame);
+        if (EventBus.Instance != null)
+        {
+            EventBus.Instance.Unregister<LevelFinishedEvent>(HandleOnLevelComplete);
+            EventBus.Instance.Unregister<PoolReadyEvent>(InitiateGame);
+        }
     }
 }

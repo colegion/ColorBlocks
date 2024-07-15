@@ -50,8 +50,11 @@ namespace UI
 
         private void RemoveListeners()
         {
-            EventBus.Instance.Unregister<MovementEvent>(UpdateMoveCountField);
-            EventBus.Instance.Unregister<LevelIndexEvent>(SetLevelField);
+            if (EventBus.Instance != null)
+            {
+                EventBus.Instance.Unregister<MovementEvent>(UpdateMoveCountField);
+                EventBus.Instance.Unregister<LevelIndexEvent>(SetLevelField);
+            }
         }
     }
 }

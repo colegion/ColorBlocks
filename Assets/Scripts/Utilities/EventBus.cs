@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace Utilities
@@ -52,6 +53,16 @@ namespace Utilities
                     ((Action<T>)listener)(eventData);
                 }
             }
+        }
+        
+        private void OnDestroy()
+        {
+            _eventListeners.Clear();
+            if (gameObject != null)
+            {
+                Destroy(gameObject);
+            }
+            _instance = null;
         }
     }
 }

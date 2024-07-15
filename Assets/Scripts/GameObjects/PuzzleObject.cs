@@ -36,7 +36,10 @@ namespace GameObjects
 
         private void RemoveListeners()
         {
-            EventBus.Instance.Unregister<ControllerReadyEvent>(InjectLevelController);
+            if (EventBus.Instance != null)
+            {
+                EventBus.Instance.Unregister<ControllerReadyEvent>(InjectLevelController);
+            }
         }
     }
 }

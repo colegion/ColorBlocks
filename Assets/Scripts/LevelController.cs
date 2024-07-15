@@ -159,9 +159,7 @@ public class LevelController
 
     private void DecreaseRemainingBlockCount()
     {
-        Debug.Log("Current count: " + _blockCount);
         _blockCount--;
-        Debug.Log("Current count: " + _blockCount);
         CheckLevelCompletion();
     }
     
@@ -180,7 +178,6 @@ public class LevelController
             _levelFinishedEventTriggered = true;
             bool isSuccess = _blockCount == 0;
             EventBus.Instance.Trigger(new LevelFinishedEvent(isSuccess));
-            Debug.Log("level done: " + isSuccess);
         }
     }
 

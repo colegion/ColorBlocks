@@ -1,12 +1,13 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Utilities
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] private Camera camera;
+        [SerializeField] private Camera gameCamera;
         [SerializeField] private int borderGap;
         private LevelController _controller;
         private void Awake()
@@ -14,7 +15,7 @@ namespace Utilities
             AddListeners();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             RemoveListeners();
         }
@@ -29,13 +30,13 @@ namespace Utilities
         {
             var width = _controller.GetWidth();
             var height = _controller.GetHeight();
-            camera.transform.position = new Vector3(width / 2f, 2, height / 4f);
+            gameCamera.transform.position = new Vector3(width / 2f, 2, height / 4f);
 
             var aspectRatio = (float)Screen.width / Screen.height;
 
             var horizontalSize = (width / 2f + borderGap) / aspectRatio;
             var verticalSize = height / 2f + borderGap;
-            camera.orthographicSize = verticalSize > horizontalSize ? verticalSize : horizontalSize;
+            gameCamera.orthographicSize = verticalSize > horizontalSize ? verticalSize : horizontalSize;
         }
 
         private void AddListeners()
