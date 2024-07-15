@@ -10,13 +10,12 @@ using static Utilities.CommonFields;
 
 namespace GameObjects
 {
-    public class Block : PuzzleObject, IMovable
+    public class Block : PuzzleObject, IMovable, IPoolable
     {
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private MeshFilter meshFilter;
+        
         
         private BlockConfig _config;
-        private GameConfig _gameConfig;
         private MovableAttributes _movableAttributes;
         private Direction[] _directions;
         private Direction _mainDirection;
@@ -27,14 +26,15 @@ namespace GameObjects
         private void OnValidate()
         {
             meshRenderer = GetComponent<MeshRenderer>();
-            meshFilter = GetComponent<MeshFilter>();
         }
 
         public void InjectBlockData(MovableAttributes attributes, GameConfig gameData)
         {
             _config = gameData.GetConfigByColor(attributes.color);
             _movableAttributes = attributes;
-            _gameConfig = gameData;
+            ConfigureDirectionArray();
+            ConfigureMesh();
+            ConfigureTransform();
         }
 
         private void ConfigureDirectionArray()
@@ -48,7 +48,7 @@ namespace GameObjects
             _mainDirection = _directions[0];
         }
     
-        private void ConfigureMesh(GameConfig gameData)
+        private void ConfigureMesh()
         {
             meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
         }
@@ -140,10 +140,12 @@ namespace GameObjects
             return finalTarget;
         }
 
-
         public override void AnimateObject(bool isSuccessful)
         {
-            
+            if (isSuccessful)
+            {
+                ReturnToPool();
+            }
         }
 
         private bool IsDesiredDirectionValid(Direction desired)
@@ -180,9 +182,17 @@ namespace GameObjects
         protected override void InjectLevelController(ControllerReadyEvent eventData)
         {
             base.InjectLevelController(eventData);
-            ConfigureDirectionArray();
-            ConfigureMesh(_gameConfig);
-            ConfigureTransform();
+            ReturnToPool();
+        }
+
+        public void EnableObject()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void ReturnToPool()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

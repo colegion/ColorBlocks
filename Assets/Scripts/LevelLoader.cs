@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
 using GameObjects;
+using Interfaces;
+using Pool;
 using Scriptables;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,74 +19,75 @@ public class LevelLoader : MonoBehaviour
     private LevelInfo _currentLevel;
     private int _levelIndex = 1;
 
-    [SerializeField] private Cell cell;
-    [SerializeField] private Exit exit;
-    
+    [SerializeField] private PoolController poolController;
     [SerializeField] private GameConfig gameConfig;
-
-    private void OnEnable()
+    
+    private void Awake()
     {
         AddListeners();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         RemoveListeners();
     }
 
-    private void Start()
+    private void InitiateGame(PoolReadyEvent eventData)
     {
         LoadLevel();
     }
 
     private void LoadLevel()
     {
-        _currentLevel = JsonReader.ReadJSon("Level1");
+        _currentLevel = JsonReader.ReadJSon($"Level{_levelIndex}");
         _levelController = new LevelController(_currentLevel.rowCount, _currentLevel.columnCount);
         _levelController.SetMoveLimit(_currentLevel.moveLimit);
         
-        SpawnCells();
-        SpawnBlocks();
-        SpawnExits();
-        EventBus.Instance.Trigger(new LevelIndexEvent(_levelIndex));
         EventBus.Instance.Trigger(new ControllerReadyEvent(_levelController));
+        ConfigureCells();
+        ConfigureBlocks();
+        ConfigureExits();
+        EventBus.Instance.Trigger(new LevelIndexEvent(_levelIndex));
     }
 
-    private void SpawnCells()
+    private void ConfigureCells()
     {
         var cells = _currentLevel.cellInfo;
         foreach (var element in cells)
         {
-            var tempCell = Instantiate(cell, transform);
+            var tempCell = poolController.GetCell();
+            poolController.AppendActiveObjects(tempCell);
             tempCell.InjectCellData(new CellAttributes(element.row, element.column));
         }
     }
 
-    private void SpawnBlocks()
+    private void ConfigureBlocks()
     {
         var movables = _currentLevel.movableInfo;
         foreach (var element in movables)
         {
-            //var pooledBlock = PuzzleObjectPool.Instance.GetAvailableBlock(element.length); 
-            var tempBlock = Instantiate(gameConfig.GetPrefabByLength(element.length), transform);
+            var tempBlock = poolController.GetBlock(element.length);
+            poolController.AppendActiveObjects(tempBlock);
             tempBlock.InjectBlockData(element, gameConfig);
         }
     }
 
-    private void SpawnExits()
+    private void ConfigureExits()
     {
         var exits = _currentLevel.exitInfo;
         foreach (var element in exits)
         {
-            var tempGate = Instantiate(exit, transform);
-            tempGate.ConfigureSelf(element);
+            var tempExit = poolController.GetExit();
+            poolController.AppendActiveObjects(tempExit);
+            tempExit.ConfigureSelf(element);
         }
     }
 
     private void HandleOnLevelComplete(LevelFinishedEvent eventData)
     {
         var result = eventData.IsSuccessful;
-
+        
+        poolController.ClearActiveObjects();
         if (result)
         {
             _levelIndex = (_levelIndex + 1) % 4;
@@ -96,10 +99,12 @@ public class LevelLoader : MonoBehaviour
     private void AddListeners()
     {
         EventBus.Instance.Register<LevelFinishedEvent>(HandleOnLevelComplete);
+        EventBus.Instance.Register<PoolReadyEvent>(InitiateGame);
     }
-
+ 
     private void RemoveListeners()
     {
         EventBus.Instance.Unregister<LevelFinishedEvent>(HandleOnLevelComplete);
+        EventBus.Instance.Unregister<PoolReadyEvent>(InitiateGame);
     }
 }

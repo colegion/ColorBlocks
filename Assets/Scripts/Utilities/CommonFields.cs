@@ -49,6 +49,11 @@ namespace Utilities
             Left
         }
 
+        public class PoolReadyEvent
+        {
+            
+        }
+
         public class ControllerReadyEvent
         {
             public LevelController Controller;

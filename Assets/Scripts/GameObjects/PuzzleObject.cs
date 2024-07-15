@@ -9,12 +9,12 @@ namespace GameObjects
     {
         protected LevelController controller;
 
-        private void OnEnable()
+        private void Awake()
         {
             AddListeners();
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             RemoveListeners();
         }
@@ -29,11 +29,6 @@ namespace GameObjects
             controller = eventData.Controller;
         }
 
-        public virtual void ReturnToPool()
-        {
-            gameObject.SetActive(false);
-        }
-
         private void AddListeners()
         {
             EventBus.Instance.Register<ControllerReadyEvent>(InjectLevelController);
@@ -41,7 +36,7 @@ namespace GameObjects
 
         private void RemoveListeners()
         {
-            EventBus.Instance.Register<ControllerReadyEvent>(InjectLevelController);
+            EventBus.Instance.Unregister<ControllerReadyEvent>(InjectLevelController);
         }
     }
 }

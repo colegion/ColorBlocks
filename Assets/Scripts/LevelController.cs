@@ -41,11 +41,11 @@ public class LevelController
 
     public void AssignBlock(Block block)
     {
+        _blockCount++;
         var blockList = block.GetCellAttributes_2();
         foreach (var coordinate in blockList)
         {
             _blockGrid[coordinate.row, coordinate.column] = block;
-            _blockCount++;
         }
     }
 
@@ -65,20 +65,20 @@ public class LevelController
         var exit = finalCell != null ? finalCell.GetExitByDirection(direction) : null;
         var isSuccessful = IsSuccessfulMovement(block, exit);
         
+        if (isSuccessful)
+        {
+            RemoveBlockFromGrid(block);
+        }
+        else
+        {
+            UpdateBlockPositionOnGrid(block, finalPos, direction);
+        }
+        
         block.MoveBlock(finalPos, direction, () =>
         {
             if (exit != null) exit.AnimateObject(isSuccessful);
             block.AnimateObject(isSuccessful);
         });
-        
-        if (isSuccessful)
-        {
-            RemoveBlockFromGrid(block.GetCellAttributes_2());
-        }
-        else
-        {
-            UpdateBlockPositionOnGrid_2(block, finalPos, direction);
-        }
         
         DecreaseMoveLimit();
     }
@@ -99,7 +99,7 @@ public class LevelController
         return exit != null && exit.GetColor() == block.GetColor();
     }
     
-    private void UpdateBlockPositionOnGrid_2(Block block, CellAttributes finalPosition, Direction direction)
+    private void UpdateBlockPositionOnGrid(Block block, CellAttributes finalPosition, Direction direction)
     {
         var currentPos = block.GetCellAttributes_2();
         foreach (var coordinate in currentPos)
@@ -127,22 +127,17 @@ public class LevelController
         block.SetCellAttributes(updatedCells);
     }
 
-    private void RemoveBlockFromGrid(List<CellAttributes> positions)
+    private void RemoveBlockFromGrid(Block block)
     {
-        Block blockToBeRemoved = null;
+        var positions = block.GetCellAttributes_2();
         foreach (var coordinate in positions)
         {
             if (IsValidCoordinate(coordinate))
             {
-                blockToBeRemoved = _blockGrid[coordinate.row, coordinate.column]; 
                 _blockGrid[coordinate.row, coordinate.column] = null;
-                
             }
         }
-        //@todo: change to not get error
-        blockToBeRemoved.ReturnToPool();
         DecreaseRemainingBlockCount();
-
     }
 
     public void SetCellExit(Exit exit)
@@ -151,8 +146,7 @@ public class LevelController
         var cell = TryGetCell(coordinates);
         cell.SetExitByDirection(exit);
     }
-
-    private bool _levelFinishedEventTriggered = false;
+    
     private void DecreaseMoveLimit()
     {
         if (_moveLimitEnabled)
@@ -165,19 +159,28 @@ public class LevelController
 
     private void DecreaseRemainingBlockCount()
     {
+        Debug.Log("Current count: " + _blockCount);
         _blockCount--;
+        Debug.Log("Current count: " + _blockCount);
         CheckLevelCompletion();
     }
-
+    
+    private bool _levelFinishedEventTriggered = false;
     private void CheckLevelCompletion()
     {
-        if (!_levelFinishedEventTriggered)
+        if (_levelFinishedEventTriggered)
         {
-            if (_moveLimit == 0 || _blockCount == 0)
-            {
-                _levelFinishedEventTriggered = true;
-                EventBus.Instance.Trigger(new LevelFinishedEvent(_blockCount == 0));
-            }
+            return;
+        }
+
+        bool isLevelComplete = _blockCount == 0 || (_moveLimitEnabled && _moveLimit == 0);
+
+        if (isLevelComplete)
+        {
+            _levelFinishedEventTriggered = true;
+            bool isSuccess = _blockCount == 0;
+            EventBus.Instance.Trigger(new LevelFinishedEvent(isSuccess));
+            Debug.Log("level done: " + isSuccess);
         }
     }
 

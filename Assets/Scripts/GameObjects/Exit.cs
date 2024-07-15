@@ -1,3 +1,4 @@
+using Interfaces;
 using UnityEngine;
 using Utilities;
 using static Utilities.CommonFields;
@@ -5,7 +6,7 @@ using EventBus = Utilities.EventBus;
 
 namespace GameObjects
 {
-    public class Exit : PuzzleObject
+    public class Exit : PuzzleObject, IPoolable
     {
         [SerializeField] private MeshRenderer[] wallMeshes;
         [SerializeField] private ParticleSystem _exitParticle;
@@ -14,17 +15,18 @@ namespace GameObjects
         public void ConfigureSelf(ExitAttributes config)
         {
             _config = config;
+            controller.SetCellExit(this);
             var xPos = config.row + DirectionVectors[(Direction)config.direction].x;
             var zPos = config.column + DirectionVectors[(Direction)config.direction].y;
             transform.position = new Vector3(xPos, 0, zPos);
             transform.rotation = Quaternion.Euler(RotationVectors[(Direction)config.direction]);
-            SetColor();
+            SetColor(ColorDictionary[(BlockColors)_config.color]);
         }
 
-        private void SetColor()
+        private void SetColor(Color color)
         {
-            wallMeshes[0].material.color = ColorDictionary[(BlockColors)_config.color];
-            wallMeshes[1].material.color = ColorDictionary[(BlockColors)_config.color];
+            wallMeshes[0].material.color = color;
+            wallMeshes[1].material.color = color;
         }
         
         public override void AnimateObject(bool isSuccessful)
@@ -61,7 +63,20 @@ namespace GameObjects
         protected override void InjectLevelController(ControllerReadyEvent eventData)
         {
             base.InjectLevelController(eventData);
-            controller.SetCellExit(this);
+            ReturnToPool();
+        }
+
+        public void EnableObject()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void ReturnToPool()
+        {
+            _config = null;
+            SetColor(Color.white);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            gameObject.SetActive(false);
         }
     }
 }
