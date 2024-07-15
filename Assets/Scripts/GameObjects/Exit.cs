@@ -31,13 +31,23 @@ namespace GameObjects
         
         public override void AnimateObject(bool isSuccessful)
         {
-            
+            PlayParticle(isSuccessful);
         }
 
         private void PlayParticle(bool isSuccessful)
         {
-            //var main = _exitParticle.main.startColor;
-            //main.color = ColorDictionary[GetColor()];
+            if (isSuccessful)
+            {
+                _exitParticle.GetComponent<Renderer>().material.color = ColorDictionary[GetColor()];
+                var main = _exitParticle.main;
+                main.startColor = new ParticleSystem.MinMaxGradient(ColorDictionary[GetColor()]);
+                _exitParticle.Play();
+            }
+        }
+
+        private void AnimateDoors(bool isSuccess)
+        {
+            
         }
 
         public BlockColors GetColor()
