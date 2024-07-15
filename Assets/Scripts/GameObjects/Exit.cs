@@ -65,10 +65,8 @@ namespace GameObjects
             }
             else
             {
-                sequence.Append(wallMeshes[0].transform.DOPunchRotation(new Vector3(0.5f, 0, 0), 0.5f)
-                    .SetEase(Ease.Linear));
-                sequence.Join(wallMeshes[1].transform.DOPunchRotation(new Vector3(0.5f, 0, 0), 0.5f)
-                    .SetEase(Ease.Linear));
+                sequence.Append(wallMeshes[0].transform.DOPunchRotation(new Vector3(15f, 0, 0), 0.5f));
+                sequence.Join(wallMeshes[1].transform.DOPunchRotation(new Vector3(15f, 0, 0), 0.5f));
             }
         }
 
