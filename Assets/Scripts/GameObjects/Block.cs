@@ -52,8 +52,10 @@ namespace GameObjects
         private void ConfigureMesh()
         {
             meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
-            trailRenderer.startColor = ColorDictionary[_config.Color];
-            trailRenderer.endColor = new Color(255, 255, 255, 0);
+            var blockColor = ColorDictionary[_config.Color];
+            blockColor.a = 130f / 255f;
+            trailRenderer.startColor = blockColor;
+            trailRenderer.endColor = blockColor;
         }
       
         private void ConfigureTransform()
@@ -109,7 +111,7 @@ namespace GameObjects
                 Debug.Log("Not movable in that direction");
             }
         }
-
+        
         public void MoveBlock(CellAttributes target, Direction direction, Action onComplete)
         {
             Vector3 finalTarget = new Vector3(target.row, 0, target.column);
@@ -118,7 +120,7 @@ namespace GameObjects
                 finalTarget = UpdateFinalTargetByDirection(direction, finalTarget);
             }
 
-            transform.DOMove(finalTarget, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
+            transform.DOMove(finalTarget, 11f).SetEase(Ease.Linear).SetSpeedBased().OnComplete(() =>
             {
                 onComplete?.Invoke();
             });

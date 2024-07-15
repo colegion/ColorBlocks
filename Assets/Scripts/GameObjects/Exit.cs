@@ -24,7 +24,7 @@ namespace GameObjects
             transform.rotation = Quaternion.Euler(RotationVectors[(Direction)config.direction]);
             if ((Direction)config.direction == Direction.Up)
             {
-                exitParticle.transform.localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+                transform.localRotation = Quaternion.Euler(new Vector3(0, 180, 0));
             }
             SetColor(ColorDictionary[(BlockColors)_config.color]);
         }
@@ -85,11 +85,6 @@ namespace GameObjects
         public CellAttributes GetCellAttributes()
         {
             return new CellAttributes(_config.row, _config.column);
-        }
-    
-        public CellAttributes GetExitPosition()
-        {
-            return new CellAttributes((int)transform.position.x, (int)transform.position.z);
         }
     
         protected override void InjectLevelController(ControllerReadyEvent eventData)

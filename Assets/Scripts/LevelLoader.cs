@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using DG.Tweening;
 using GameObjects;
 using Interfaces;
 using Pool;
@@ -85,14 +86,17 @@ public class LevelLoader : MonoBehaviour
 
     private void HandleOnLevelComplete(LevelFinishedEvent eventData)
     {
-        poolController.ClearActiveObjects();
-    
         if (eventData.IsSuccessful)
         {
             _levelIndex = _levelIndex % 4 + 1;
         }
 
-        LoadLevel();
+        DOVirtual.DelayedCall(1.5f, () =>
+        {
+            poolController.ClearActiveObjects();
+            LoadLevel();
+        });
+
     }
 
     private void AddListeners()

@@ -58,10 +58,6 @@ namespace Utilities
         private void OnDestroy()
         {
             _eventListeners.Clear();
-            if (gameObject != null)
-            {
-                Destroy(gameObject);
-            }
             _instance = null;
         }
     }
