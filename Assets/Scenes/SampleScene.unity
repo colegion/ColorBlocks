@@ -295,7 +295,7 @@ MonoBehaviour:
     type: 3}
   exitPrefab: {fileID: 4309899792193395183, guid: 0aa59eb2347999e49b29d95eb20f2c54,
     type: 3}
-  poolSize: 40
+  poolSize: 60
 --- !u!4 &363492613
 Transform:
   m_ObjectHideFlags: 0
@@ -932,7 +932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0

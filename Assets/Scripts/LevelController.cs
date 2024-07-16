@@ -41,6 +41,10 @@ public class LevelController
         _blockCount++;
         foreach (var coordinate in block.GetCellAttributesList())
         {
+            if (!IsValidCoordinate(coordinate))
+            {
+                
+            }
             _blockGrid[coordinate.row, coordinate.column] = block;
         }
     }

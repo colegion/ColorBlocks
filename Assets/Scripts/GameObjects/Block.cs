@@ -63,6 +63,7 @@ namespace GameObjects
       
         private void ConfigureTransform()
         {
+            _cellAttributes.Clear();
             _orientation = new Dictionary<Direction, CellAttributes>();
             CellAttributes position = new CellAttributes(_movableAttributes.row, _movableAttributes.column);
             transform.position = new Vector3(_movableAttributes.row, 0, _movableAttributes.column);
@@ -221,6 +222,8 @@ namespace GameObjects
 
         public void ReturnToPool()
         {
+            _dissolveEffect = null;
+            meshRenderer.material.SetFloat("_CutoffHeight", 1.2f);
             gameObject.SetActive(false);
         }
     }

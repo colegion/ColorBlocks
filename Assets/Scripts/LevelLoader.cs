@@ -91,7 +91,7 @@ public class LevelLoader : MonoBehaviour
             _levelIndex = _levelIndex % 4 + 1;
         }
 
-        DOVirtual.DelayedCall(1.5f, () =>
+        DOVirtual.DelayedCall(3f, () =>
         {
             poolController.ClearActiveObjects();
             LoadLevel();
