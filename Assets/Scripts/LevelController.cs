@@ -42,7 +42,7 @@ public class LevelController
     public void AssignBlock(Block block)
     {
         _blockCount++;
-        var blockList = block.GetCellAttributes_2();
+        var blockList = block.GetCellAttributesList();
         foreach (var coordinate in blockList)
         {
             _blockGrid[coordinate.row, coordinate.column] = block;
@@ -51,7 +51,7 @@ public class LevelController
 
     public void MoveBlock(Block block, Direction direction)
     {
-        var initialPos = block.GetCellAttributes(direction);
+        var initialPos = block.GetCellAttribute(direction);
         var directionVector = DirectionVectors[direction];
         var nextPos = new CellAttributes(initialPos.row + directionVector.x, initialPos.column + directionVector.y);
         CellAttributes finalPos = initialPos;
@@ -101,7 +101,7 @@ public class LevelController
     
     private void UpdateBlockPositionOnGrid(Block block, CellAttributes finalPosition, Direction direction)
     {
-        var currentPos = block.GetCellAttributes_2();
+        var currentPos = block.GetCellAttributesList();
         foreach (var coordinate in currentPos)
         {
             _blockGrid[coordinate.row, coordinate.column] = null;
@@ -129,7 +129,7 @@ public class LevelController
 
     private void RemoveBlockFromGrid(Block block)
     {
-        var positions = block.GetCellAttributes_2();
+        var positions = block.GetCellAttributesList();
         foreach (var coordinate in positions)
         {
             if (IsValidCoordinate(coordinate))

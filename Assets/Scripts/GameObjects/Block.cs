@@ -64,7 +64,7 @@ namespace GameObjects
             CellAttributes position = new CellAttributes(_movableAttributes.row, _movableAttributes.column);
             transform.position = new Vector3(_movableAttributes.row, 0, _movableAttributes.column);
             _cellAttributes.Add(position);
-            for (int i = 0; i < _directions.Length; i++)
+            for (int i = _directions.Length-1 ; i >= 0; i--)
             {
                 position = new CellAttributes(_movableAttributes.row + DirectionVectors[_directions[i]].x * (_movableAttributes.length -1),
                     _movableAttributes.column + DirectionVectors[_directions[i]].y * (_movableAttributes.length -1));
@@ -88,8 +88,7 @@ namespace GameObjects
                 _orientation[direction] = coordinate;
             }
         }
-    
-
+        
         public Direction GetOppositeDirection(Direction given)
         {
             foreach (var direction in _directions)
@@ -102,28 +101,42 @@ namespace GameObjects
 
         public void TriggerMovement(Direction direction)
         {
-            if (IsDesiredDirectionValid(direction))
+            if (IsDirectionValid(direction))
             {
                 controller.MoveBlock(this, direction);
             }
             else
             {
+                AnimateStuck(direction);
                 Debug.Log("Not movable in that direction");
             }
         }
-        
+
+        private void AnimateStuck(Direction direction)
+        {
+            var punch = direction is Direction.Up or Direction.Down ? new Vector3(0.1f, 0, 0) : new Vector3(0f, 0, 0.1f); 
+            transform.DOPunchPosition(punch, 0.3f);
+        }
+
         public void MoveBlock(CellAttributes target, Direction direction, Action onComplete)
         {
-            Vector3 finalTarget = new Vector3(target.row, 0, target.column);
+            var finalTarget = new Vector3(target.row, 0, target.column);
             if (GetLength() > 1)
             {
                 finalTarget = UpdateFinalTargetByDirection(direction, finalTarget);
             }
 
-            transform.DOMove(finalTarget, 11f).SetEase(Ease.Linear).SetSpeedBased().OnComplete(() =>
+            if (finalTarget == transform.position)
             {
-                onComplete?.Invoke();
-            });
+                AnimateStuck(direction);
+            }
+            else
+            {
+                transform.DOMove(finalTarget, 11f).SetEase(Ease.Linear).SetSpeedBased().OnComplete(() =>
+                {
+                    onComplete?.Invoke();
+                });
+            }
         }
 
         private Vector3 UpdateFinalTargetByDirection(Direction direction, Vector3 finalTarget)
@@ -153,7 +166,7 @@ namespace GameObjects
             }
         }
 
-        private bool IsDesiredDirectionValid(Direction desired)
+        private bool IsDirectionValid(Direction desired)
         {
             return _directions.Contains(desired);
         }
@@ -168,13 +181,13 @@ namespace GameObjects
             return _movableAttributes.length;
         }
 
-        public CellAttributes GetCellAttributes(Direction direction)
+        public CellAttributes GetCellAttribute(Direction direction)
         {
             if (_orientation.TryGetValue(direction, out CellAttributes coordinate)) return coordinate;
             return new CellAttributes((int)transform.position.x, (int)transform.position.z);
         }
 
-        public List<CellAttributes> GetCellAttributes_2()
+        public List<CellAttributes> GetCellAttributesList()
         {
             return _cellAttributes;
         }
