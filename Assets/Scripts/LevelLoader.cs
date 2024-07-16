@@ -28,7 +28,7 @@ public class LevelLoader : MonoBehaviour
         AddListeners();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         RemoveListeners();
     }

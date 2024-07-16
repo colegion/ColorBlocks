@@ -42,6 +42,7 @@ public class ParticlesController : MonoBehaviour
 
     private void RemoveListeners()
     {
-        EventBus.Instance.Unregister<CommonFields.LevelFinishedEvent>(HandleLevelCompletion);
+        if(EventBus.Instance != null)
+            EventBus.Instance.Unregister<CommonFields.LevelFinishedEvent>(HandleLevelCompletion);
     }
 }

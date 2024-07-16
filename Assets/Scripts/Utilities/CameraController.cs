@@ -60,7 +60,8 @@ namespace Utilities
 
         private void RemoveListeners()
         {
-            EventBus.Instance.Unregister<CommonFields.ControllerReadyEvent>(InjectLevelController);
+            if(EventBus.Instance)
+                EventBus.Instance.Unregister<CommonFields.ControllerReadyEvent>(InjectLevelController);
         }
     }
 }

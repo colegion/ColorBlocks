@@ -8,15 +8,18 @@ namespace Utilities
     public class EventBus : MonoBehaviour
     {
         private static EventBus _instance;
+        private static bool _isInitialized;
+
         public static EventBus Instance
         {
             get
             {
-                if (_instance == null)
+                if (_instance == null && !_isInitialized)
                 {
                     var eventBusGameObject = new GameObject("EventBus");
                     _instance = eventBusGameObject.AddComponent<EventBus>();
                     DontDestroyOnLoad(eventBusGameObject);
+                    _isInitialized = true;
                 }
                 return _instance;
             }
