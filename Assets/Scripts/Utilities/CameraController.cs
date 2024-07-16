@@ -8,7 +8,6 @@ namespace Utilities
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private Camera gameCamera;
-        [SerializeField] private int borderGap;
         private LevelController _controller;
         private void Awake()
         {
@@ -30,13 +29,28 @@ namespace Utilities
         {
             var width = _controller.GetWidth();
             var height = _controller.GetHeight();
-            gameCamera.transform.position = new Vector3(width / 2f, 2, height / 4f);
+            
+            float middleX = width / 2f;
+            float middleZ = height / 4f;
+            
+            float fov = gameCamera.fieldOfView * Mathf.Deg2Rad;
+            
+            float aspectRatio = (float)Screen.width / Screen.height;
+            float gridAspect = (float)width / height;
 
-            var aspectRatio = (float)Screen.width / Screen.height;
-
-            var horizontalSize = (width / 2f + borderGap) / aspectRatio;
-            var verticalSize = height / 2f + borderGap;
-            gameCamera.orthographicSize = verticalSize > horizontalSize ? verticalSize : horizontalSize;
+            float distance;
+            if (gridAspect > aspectRatio)
+            {
+                distance = width / Mathf.Tan(fov / 4f);
+            }
+            else
+            {
+                distance = height / Mathf.Tan(fov / 4f);
+            }
+            
+            gameCamera.transform.position = new Vector3(middleX, distance, middleZ);
+            gameCamera.transform.LookAt(new Vector3(middleX, 0, middleZ));
+            gameCamera.transform.rotation = Quaternion.Euler(80, -90, 0);
         }
 
         private void AddListeners()
