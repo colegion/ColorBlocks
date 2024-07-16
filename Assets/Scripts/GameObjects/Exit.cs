@@ -35,7 +35,7 @@ namespace GameObjects
             wallMeshes[1].material.color = color;
         }
         
-        public override void AnimateObject(bool isSuccessful)
+        public override void AnimateObject(bool isSuccessful, Direction direction)
         {
            AnimateDoors(isSuccessful);
         }

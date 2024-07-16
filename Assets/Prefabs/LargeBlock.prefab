@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 22c63b6de7518094b8cca750192649d3, type: 2}
+  - {fileID: 2100000, guid: d842c291084295847abe917871311cb4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 1909447388108415659}
   trailRenderer: {fileID: 6558236556223468427}
+  cutOff: -5
 --- !u!65 &1927454865360784262
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -195,7 +196,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 0.8
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

@@ -84,8 +84,8 @@ public class LevelController
 
         block.MoveBlock(finalPos, direction, () =>
         {
-            exit?.AnimateObject(isSuccessful);
-            block.AnimateObject(isSuccessful);
+            exit?.AnimateObject(isSuccessful, direction);
+            block.AnimateObject(isSuccessful, direction);
         });
     }
 

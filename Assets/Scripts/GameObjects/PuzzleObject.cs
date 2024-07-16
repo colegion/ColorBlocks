@@ -19,7 +19,7 @@ namespace GameObjects
             RemoveListeners();
         }
 
-        public virtual void AnimateObject(bool isSuccessful)
+        public virtual void AnimateObject(bool isSuccessful, Direction direction)
         {
             
         }

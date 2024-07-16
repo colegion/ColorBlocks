@@ -14,6 +14,9 @@ namespace GameObjects
     {
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private TrailRenderer trailRenderer;
+        [SerializeField] private float cutOff;
+        
+        private DissolveEffect _dissolveEffect;
         
         
         private BlockConfig _config;
@@ -51,7 +54,7 @@ namespace GameObjects
     
         private void ConfigureMesh()
         {
-            meshRenderer.material.mainTexture = _config.GetTextureByLength(_movableAttributes.length, _directions[0]);
+            meshRenderer.material.SetTexture("_MainTex", _config.GetTextureByLength(_movableAttributes.length, _directions[0]));
             var blockColor = ColorDictionary[_config.Color];
             blockColor.a = 130f / 255f;
             trailRenderer.startColor = blockColor;
@@ -132,7 +135,7 @@ namespace GameObjects
             }
             else
             {
-                transform.DOMove(finalTarget, 11f).SetEase(Ease.Linear).SetSpeedBased().OnComplete(() =>
+                transform.DOMove(finalTarget, 9f).SetEase(Ease.Linear).SetSpeedBased().OnComplete(() =>
                 {
                     onComplete?.Invoke();
                 });
@@ -158,11 +161,18 @@ namespace GameObjects
             return finalTarget;
         }
 
-        public override void AnimateObject(bool isSuccessful)
+        public override void AnimateObject(bool isSuccessful, Direction direction)
         {
             if (isSuccessful)
             {
-                ReturnToPool();
+                var position = transform.position;
+                var vector = DirectionVectors[direction];
+                var target = new Vector3(position.x + (vector.x * GetLength()), 0, position.z + (vector.y * GetLength()));
+                _dissolveEffect = new DissolveEffect(meshRenderer, ColorDictionary[GetColor()], cutOff, 5f, this, direction);
+                transform.DOMove(target, 1f).SetEase(Ease.Flash);
+                transform.DOShakeScale(1f, 0.05f);
+                trailRenderer.gameObject.SetActive(false);
+                DOVirtual.DelayedCall(2.5f, ReturnToPool);
             }
         }
 
@@ -206,6 +216,7 @@ namespace GameObjects
         public void EnableObject()
         {
             gameObject.SetActive(true);
+            trailRenderer.gameObject.SetActive(true);
         }
 
         public void ReturnToPool()
